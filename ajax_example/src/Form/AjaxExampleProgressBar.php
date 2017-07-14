@@ -57,29 +57,6 @@ class AjaxExampleProgressBar extends FormBase {
 
 }
 
-/**
- * Get the progress bar execution status, as JSON.
- *
- * This is the menu handler for
- * examples/ajax_example/progressbar/progress/{time}.
- *
- * This function is our wholly arbitrary job that we're checking the status for.
- * In this case, we're reading a system variable that is being updated by
- * ajax_example_progressbar_callback().
- *
- * We set up the AJAX progress bar to check the status every second, so this
- * will execute about once every second.
- *
- * The progress bar JavaScript accepts two values: message and percentage. We
- * set those in an array and in the end convert it JSON for sending back to the
- * client-side JavaScript.
- *
- * @param int $time
- *   Timestamp.
- *
- * @see ajax_example_progressbar_callback()
- */
-
 
 /**
  * Our submit handler.
@@ -114,7 +91,7 @@ public function ajax_example_progressbar_callback($form, &$form_state) {
   ->save();
   sleep(2);
 
-  $commands[] = HtmlCommand('#progress-status', $this->t('Executed.'));
+  $commands[] = new HtmlCommand('#progress-status', $this->t('Executed.'));
 
   return array(
     '#type' => 'ajax',

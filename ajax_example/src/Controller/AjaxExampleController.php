@@ -9,7 +9,7 @@ namespace Drupal\ajax_example\Controller;
 
 use \Drupal\Core\Url;
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Controller routines for block example routes.
@@ -38,6 +38,6 @@ public function ajax_example_progressbar_progress($time) {
     $progress['percentage'] = $completed_percentage;
   }
 
-  \Drupal::JsonResponse($progress);
+  return new JsonResponse($progress);
 }
 }
