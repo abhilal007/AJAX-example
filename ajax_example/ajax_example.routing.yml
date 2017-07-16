@@ -31,3 +31,19 @@ ajax_example.progresssbarProgress:
     time: ''
   requirements:
     _access: 'TRUE'
+
+ajax_example.autocheckboxes:
+  path: 'examples/ajax-example/autocheckboxes'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleAutocheckboxes'
+    _title: 'Generate checkboxes'
+  requirements:
+    _access: 'TRUE'
+
+ajax_example.autotextfields:
+  path: 'examples/ajax-example/autotextfields'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleAutotextfields'
+    _title: 'Generate textfields'
+  requirements:
+    _access: 'TRUE'

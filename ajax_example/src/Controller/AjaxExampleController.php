@@ -25,14 +25,14 @@ class AjaxExampleController extends ControllerBase{
     $output['list']['#items'][] = \Drupal::l(t('Simplest AJAX Example'), Url::fromRoute('ajax_example.simplest'));
     return $output;
   }
-public function ajax_example_progressbar_progress($time) {
-  $variable_name = '';
+public function ajax_example_progressbar_progress($time = '') {
+
   $progress = array(
     'message' => $this->t('Starting execute...'),
     'percentage' => -1,
   );
 
-  $completed_percentage = \Drupal::config('example_progressbar_' . $time, 0)->get($variable_name);
+  $completed_percentage = \Drupal::config('ajaxexample.settings')->get($variable_name);
   if ($completed_percentage) {
     $progress['message'] = $this->t('Executing...');
     $progress['percentage'] = $completed_percentage;
