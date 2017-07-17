@@ -47,3 +47,19 @@ ajax_example.autotextfields:
     _title: 'Generate textfields'
   requirements:
     _access: 'TRUE'
+
+ajax_example.submit-driven-ajax:
+  path: 'examples/ajax-example/submit-driven-ajax'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleSubmitDriven'
+    _title: 'Submit-driven AJAX'
+  requirements:
+    _access: 'TRUE'
+
+ajax_example.dependent_dropdown:
+  path: 'examples/ajax_example/dependent_dropdown'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleDependentDropdown'
+    _title: 'Dependent dropdown'
+  requirements:
+    _access: 'TRUE'
