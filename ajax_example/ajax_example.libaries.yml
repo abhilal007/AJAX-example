@@ -1,0 +1,7 @@
+ajax_example.dropdown:
+  version: VERSION
+  css:
+    theme:
+      css/ajax_example.css: {}
+  js:
+    js/ajax_example.js: {}

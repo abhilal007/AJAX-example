@@ -63,3 +63,21 @@ ajax_example.dependent_dropdown:
     _title: 'Dependent dropdown'
   requirements:
     _access: 'TRUE'
+
+ajax_example.dependent_dropdown_degardes:
+  path: 'examples/ajax_example/dependent_dropdown_degardes'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleDependentDropdownDegardes'
+    _title: 'Dependent dropdown degardes'
+  requirements:
+    _access: 'TRUE'
+
+ajax_example.dependent_dropdown_degardes_nojava:
+  path: 'examples/ajax_example/dependent_dropdown_degardes_nojava'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleDependentDropdownDegardes'
+    _title: 'Dependent dropdown degardes'
+
+  requirements:
+    _access: 'TRUE'
+
