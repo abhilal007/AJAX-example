@@ -83,13 +83,13 @@ class AjaxExampleDependentDropdown extends FormBase {
    *
    */
   public function _ajax_example_get_first_dropdown_options() {
-    // drupal_map_assoc() just makes an array('String' => 'String'...).
+
     return
     [
       'String' => 'String',
       'Woodwind' => 'Woodwind',
       'Brass' => 'Brass',
-      'Percussion' => 'Percussiom',
+      'Percussion' => 'Percussion',
 
     ];
   }
@@ -106,45 +106,47 @@ class AjaxExampleDependentDropdown extends FormBase {
    *   Dropdown options
    */
   public function _ajax_example_get_second_dropdown_options($key = '') {
-    $options = [
-      t('String') =>
-      [
-        'Violin' => 'Violin',
-        'Viola' => 'Viola',
-        'Cello' => 'Cello',
-        'Double Bass' => 'Double Bass',
+    switch ($key) {
+      case 'String':
+        $options = [
+          'Violin' => 'Violin',
+          'Viola' => 'Viola',
+          'Cello' => 'Cello',
+          'Double Bass' => 'Double Bass',
+        ];
 
-      ],
-      t('Woodwind') =>
-      [
-        'Flute' => 'Flute',
-        'Clarinet' => 'Clarinet',
-        'Oboe' => 'Oboe',
-        'Bassoon' => 'Bassoon',
+        return $options;
 
-      ],
-      t('Brass') =>
-      [
-        'Trumpet' => 'Trumpet',
-        'Trombone' => 'Trombone',
-        'French Horn' => 'French Horn',
-        'Euphonium' => 'Euphonium',
+      case 'Woodwind':
+        $options = [
+          'Flute' => 'Flute',
+          'Clarinet' => 'Clarinet',
+          'Oboe' => 'Oboe',
+          'Bassoon' => 'Bassoon',
+        ];
+        return $options;
 
-      ],
-      t('Percussion') =>
-      [
-        'Bass Drum' => 'Bass Drum',
-        'Timpani' => 'Timpani',
-        'Snare Drum' => 'Snare Drum',
-        'Tambourine' => 'Tambourine',
+      case 'Brass':
+        $options = [
+          'Trumpet' => 'Trumpet',
+          'Trombone' => 'Trombone',
+          'French Horn' => 'French Horn',
+          'Euphonium' => 'Euphonium',
+        ];
+        return $options;
 
-      ],
-    ];
-    if (isset($options[$key])) {
-      return $options[$key];
-    }
-    else {
-      return [];
+      case 'Percussion':
+        $options = [
+          'Bass Drum' => 'Bass Drum',
+          'Timpani' => 'Timpani',
+          'Snare Drum' => 'Snare Drum',
+          'Tambourine' => 'Tambourine',
+        ];
+        return $options;
+
+      default:
+        return 'none';
+
     }
   }
 
