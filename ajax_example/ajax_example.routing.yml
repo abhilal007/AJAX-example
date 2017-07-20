@@ -73,11 +73,28 @@ ajax_example.dependent_dropdown_degardes:
     _access: 'TRUE'
 
 ajax_example.dependent_dropdown_degardes_nojava:
-  path: 'examples/ajax_example/dependent_dropdown_degardes_nojava'
+  path: 'examples/ajax_example/dependent_dropdown_degardes_nojava/{no_js_use}'
   defaults:
     _form: '\Drupal\ajax_example\Form\AjaxExampleDependentDropdownDegardes'
-    _title: 'Dependent dropdown degardes'
+    _title: 'Dependent dropdown degardes w/JS turned off '
+    no_js_use: TRUE
+  requirements:
+    _access: 'TRUE'
 
+ajax_example.dynamic_sections:
+  path: 'examples/ajax_example/dynamic_sections'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleDynamicSectionsDegardes'
+    _title: 'Dynamic Sections (with graceful degradation)'
+  requirements:
+    _access: 'TRUE'
+
+ajax_example.dynamic_sections_nojava:
+  path: 'examples/ajax_example/dynamic_sections_nojava/{no_js_use}'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleDynamicSectionsDegardes'
+    _title: 'Dynamic Sections w/JS turned off'
+    no_js_use: TRUE
   requirements:
     _access: 'TRUE'
 
