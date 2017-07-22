@@ -57,7 +57,7 @@ ajax_example.submit-driven-ajax:
     _access: 'TRUE'
 
 ajax_example.dependent_dropdown:
-  path: 'examples/ajax_example/dependent_dropdown'
+  path: 'examples/ajax-example/dependent-dropdown'
   defaults:
     _form: '\Drupal\ajax_example\Form\AjaxExampleDependentDropdown'
     _title: 'Dependent dropdown'
@@ -65,7 +65,7 @@ ajax_example.dependent_dropdown:
     _access: 'TRUE'
 
 ajax_example.dependent_dropdown_degardes:
-  path: 'examples/ajax_example/dependent_dropdown_degardes'
+  path: 'examples/ajax-example/dependent-dropdown-degardes'
   defaults:
     _form: '\Drupal\ajax_example\Form\AjaxExampleDependentDropdownDegardes'
     _title: 'Dependent dropdown degardes'
@@ -73,7 +73,7 @@ ajax_example.dependent_dropdown_degardes:
     _access: 'TRUE'
 
 ajax_example.dependent_dropdown_degardes_nojava:
-  path: 'examples/ajax_example/dependent_dropdown_degardes_nojava/{no_js_use}'
+  path: 'examples/ajax-example/dependent-dropdown-degardes-nojava/{no_js_use}'
   defaults:
     _form: '\Drupal\ajax_example\Form\AjaxExampleDependentDropdownDegardes'
     _title: 'Dependent dropdown degardes w/JS turned off '
@@ -82,7 +82,7 @@ ajax_example.dependent_dropdown_degardes_nojava:
     _access: 'TRUE'
 
 ajax_example.dynamic_sections:
-  path: 'examples/ajax_example/dynamic_sections'
+  path: 'examples/ajax-example/dynamic-sections'
   defaults:
     _form: '\Drupal\ajax_example\Form\AjaxExampleDynamicSectionsDegardes'
     _title: 'Dynamic Sections (with graceful degradation)'
@@ -90,10 +90,27 @@ ajax_example.dynamic_sections:
     _access: 'TRUE'
 
 ajax_example.dynamic_sections_nojava:
-  path: 'examples/ajax_example/dynamic_sections_nojava/{no_js_use}'
+  path: 'examples/ajax-example/dynamic-sections-nojava/{no_js_use}'
   defaults:
     _form: '\Drupal\ajax_example\Form\AjaxExampleDynamicSectionsDegardes'
     _title: 'Dynamic Sections w/JS turned off'
+    no_js_use: TRUE
+  requirements:
+    _access: 'TRUE'
+
+ajax_example.Wizard:
+  path: 'examples/ajax-example/wizard'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleWizard'
+    _title: 'Wizard (with graceful degradation)'
+  requirements:
+    _access: 'TRUE'
+
+ajax_example.Wizardnojs:
+  path: 'examples/ajax-example/wizard-nojs/{no_js_use}'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleWizard'
+    _title: 'Wizard (with graceful degradation) w/JS turned off'
     no_js_use: TRUE
   requirements:
     _access: 'TRUE'

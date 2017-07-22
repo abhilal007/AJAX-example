@@ -23,12 +23,12 @@ class AjaxExampleDynamicSectionsDegardes extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $no_js_use = FALSE) {
-    $url = Url::fromUri('internal:/examples/ajax_example/dynamic_sections_no_js');
-    $link = Link::fromTextAndUrl($this->t('examples/ajax_example/dynamic_sections_no_js'), $url)->toString();
+    $url = Url::fromUri('internal:/examples/ajax-example/dynamic-sections-no_js');
+    $link = Link::fromTextAndUrl($this->t('examples/ajax-example/dynamic-sections-no-js'), $url)->toString();
 
     // Prepare link for multiple arguments.
-    $urltwo = Url::fromUri('internal:/examples/ajax_example/dynamic_sections');
-    $linktwo = Link::fromTextAndUrl($this->t('examples/ajax_example/dynamic_sections'), $urltwo)->toString();
+    $urltwo = Url::fromUri('internal:/examples/ajax-example/dynamic-sections');
+    $linktwo = Link::fromTextAndUrl($this->t('examples/ajax-example/dynamic-sections'), $urltwo)->toString();
 
     $form['#attached']['library'][] = 'ajax_example/ajax_eample.dropdown';
 
@@ -142,7 +142,7 @@ class AjaxExampleDynamicSectionsDegardes extends FormBase {
    */
 
 
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function ajax_example_dynamic_sections_validate(array &$form, FormStateInterface $form_state) {
     $answer = $form_state->getValue('question');
     if ($answer !== t('George Washington')) {
       $form_state->setErrorByName('question', t('Wrong answer. Try again. (Hint: The right answer is "George Washington".'));
