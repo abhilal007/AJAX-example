@@ -115,3 +115,20 @@ ajax_example.Wizardnojs:
   requirements:
     _access: 'TRUE'
 
+ajax_example.Addmore:
+  path: 'examples/ajax-example/add-more'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleAddMore'
+    _title: 'Add more button (with graceful degradation)'
+  requirements:
+    _access: 'TRUE'
+
+ajax_example.Addmorenojs:
+  path: 'examples/ajax-example/add-more-nojs/{no_js_use}'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleAddMore'
+    _title: 'Add more button (with graceful degradation) w/JS turned off'
+    no_js_use: TRUE
+  requirements:
+    _access: 'TRUE'
+

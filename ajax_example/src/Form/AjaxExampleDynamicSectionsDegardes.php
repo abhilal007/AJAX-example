@@ -158,7 +158,7 @@ class AjaxExampleDynamicSectionsDegardes extends FormBase {
     // select is changed.
     // Now handle the case of the next, previous, and submit buttons.
     // Only submit will result in actual submission, all others rebuild.
-    switch ($form_state->settriggering_element('#value')) {
+    switch ($form_state->getTriggeringElement()) {
       case t('Submit your answer'):
         // Submit: We're done.
         $form_state->setRebuild(FALSE);

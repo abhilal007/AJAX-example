@@ -40,11 +40,11 @@ class AjaxExampleWizard extends FormBase {
 
     // $form_state['storage'] has no specific drupal meaning, but it is
     // traditional to keep variables for multistep forms there.
-    $step = !empty($form_state->getStorage()) ? $form_state->getStorage() : 1 ;
+    //$step['step'] = !empty($form_state->getStorage()) ? 1 : $form_state->getStorage() ;
 
-    $form_state->setStorage($step);
+    //$form_state->setStorage($step);
 
-    switch ($step) {
+    switch ($step['step']) {
       case 1:
         $form['step1'] = [
           '#type' => 'fieldset',
