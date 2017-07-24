@@ -40,10 +40,10 @@ class AjaxExampleWizard extends FormBase {
 
     // $form_state['storage'] has no specific drupal meaning, but it is
     // traditional to keep variables for multistep forms there.
-    //$step['step'] = !empty($form_state->getStorage()) ? 1 : $form_state->getStorage() ;
+    $step['step'] = !empty($form_state->getStorage()) ? $form_state->getStorage() : 1 ;
 
-    //$form_state->setStorage($step);
-
+    $form_state->setStorage($step);
+ print_r($step['step']);
     switch ($step['step']) {
       case 1:
         $form['step1'] = [
@@ -84,13 +84,13 @@ class AjaxExampleWizard extends FormBase {
         ];
         break;
     }
-    if ($step == 3) {
+    if ($step['step'] == 3) {
       $form['submit'] = [
         '#type' => 'submit',
         '#value' => t("Submit your information"),
       ];
     }
-    if ($step < 3) {
+    if ($step['step'] < 3) {
       $form['next'] = [
         '#type' => 'submit',
         '#value' => t('Next step'),
@@ -100,7 +100,7 @@ class AjaxExampleWizard extends FormBase {
         ],
       ];
     }
-    if ($step > 1) {
+    if ($step['step'] > 1) {
       $form['prev'] = [
         '#type' => 'submit',
         '#value' => t("Previous step"),
@@ -154,6 +154,7 @@ class AjaxExampleWizard extends FormBase {
    * button click.
    */
   public function ajax_example_wizard_submit($form, &$form_state) {
+  }
 
     // Save away the current information.
 
@@ -198,4 +199,4 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setRebuild(TRUE);
   }
 }
-}
+
