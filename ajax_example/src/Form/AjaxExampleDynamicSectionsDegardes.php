@@ -141,14 +141,14 @@ class AjaxExampleDynamicSectionsDegardes extends FormBase {
    * Validation function for ajax_example_dynamic_sections().
    */
 
-
+/*
   public function ajax_example_dynamic_sections_validate(array &$form, FormStateInterface $form_state) {
     $answer = $form_state->getValue('question');
     if ($answer !== t('George Washington')) {
       $form_state->setErrorByName('question', t('Wrong answer. Try again. (Hint: The right answer is "George Washington".'));
 
   }
-}
+}*/
 
   /**
    * Submit function for ajax_example_dynamic_sections().
@@ -158,7 +158,43 @@ class AjaxExampleDynamicSectionsDegardes extends FormBase {
     // select is changed.
     // Now handle the case of the next, previous, and submit buttons.
     // Only submit will result in actual submission, all others rebuild.
-    switch ($form_state->getTriggeringElement()) {
+    if($form_state->getValue('question_type_submit') == 'Choose'){
+          //print_r("Why is this");
+          $form_state->setValue('question_type_select', $form_state->getUserInput()['question_type_select']);
+          $form_state->setRebuild();
+
+
+
+        }
+
+    if($form_state->getValue('submit') == 'Submit your answer'){
+        $form_state->setRebuild(FALSE);
+
+        $answer = $form_state->getValue('question');
+
+        // Special handling for the checkbox.
+        if ($answer == 1 && $form['questions_fieldset']['question']['#type'] == 'checkbox') {
+          $answer = $form['questions_fieldset']['question']['#title'];
+        }
+        if ($answer === t('George Washington')) {
+          drupal_set_message(t('You got the right answer: @answer', ['@answer' => $answer]));
+        }
+        else {
+          drupal_set_message(t('Sorry, your answer (@answer) is wrong', ['@answer' => $answer]));
+        }
+        return;
+
+      }
+      //default:
+        //drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
+        //return;
+
+
+    // 'Choose' or anything else will cause rebuild of the form and present
+    // it again.
+    $form_state->setRebuild();
+  }
+    /**switch ($form_state->getTriggeringElement()) {
       case t('Submit your answer'):
         // Submit: We're done.
         $form_state->setRebuild(FALSE);
@@ -184,8 +220,8 @@ class AjaxExampleDynamicSectionsDegardes extends FormBase {
 
         // Fall through.
 
-    }
-  }
+    }*/
+
 
   /**
    * Callback for the select element.

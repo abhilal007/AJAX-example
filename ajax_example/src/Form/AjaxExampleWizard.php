@@ -156,13 +156,15 @@ class AjaxExampleWizard extends FormBase {
   public function ajax_example_wizard_submit($form, &$form_state) {
 
     // Save away the current information.
-    $current_step = 'step' . $form_state->getStorage('step');
+
+public function submitForm(array &$form, FormStateInterface $form_state) {
+  $current_step = 'step' . $form_state->getStorage('step');
     if (!empty($form_state->getValue($current_step))) {
       $form_state->getStorage($current_step, $form_state->getValue($current_step));
     }
 
     // Increment or decrement the step as needed. Recover values if they exist.
-    if ($form_state->settriggering_element('#value') == t('Next step')) {
+    if ($form_state->setTriggeringElement('#value') == t('Next step')) {
       //$form_state->getStorage('step')++;
       // If values have already been entered for this step, recover them from
       // $form_state['storage'] to pre-populate them.
@@ -171,7 +173,7 @@ class AjaxExampleWizard extends FormBase {
         $form_state->setStorage($step_name, $form_state->getValue($step_name));
       }
     }
-    if ($form_state->settriggering_element('#value') == t('Previous step')) {
+    if ($form_state->setTriggeringElement('#value') == t('Previous step')) {
       //$form_state['storage']['step']--;
       // Recover our values from $form_state['storage'] to pre-populate them.
       $step_name = 'step' . $form_state->getStorage('step');
@@ -179,7 +181,7 @@ class AjaxExampleWizard extends FormBase {
     }
 
     // If they're done, submit.
-    if ($form_state->settriggering_element('#value') == t('Submit your information')) {
+    if ($form_state->setTriggeringElement('#value') == t('Submit your information')) {
       $value_message = t('Your information has been submitted:') . ' ';
       foreach ($form_state->getStorage($form_state->getValue()) as $step => $values) {
         $value_message .= "$step: ";
@@ -195,7 +197,5 @@ class AjaxExampleWizard extends FormBase {
     // Otherwise, we still have work to do.
     $form_state->setRebuild(TRUE);
   }
-public function submitForm(array &$form, FormStateInterface $form_state) {
-
 }
 }

@@ -126,12 +126,28 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    switch ($form_state->getTriggeringElement()) {
-      case t('OK'):
+    //switch ($form_state->getTriggeringElement()) {
+      //case t('OK'):
         // Submit: We're done.
+        if($form_state->getValue('continue_to_second') == 'Choose'){
+          //print_r("Why is this");
+          $form_state->setRebuild();
+          if ($form_state->getValue('dropdown_second')== ''){
+            return;
+          }
+
+
+        }
+
+        if($form_state->getValue('submit') == 'OK'){
         drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
         return;
-    }
+      }
+      //default:
+        //drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
+        //return;
+
+
     // 'Choose' or anything else will cause rebuild of the form and present
     // it again.
     $form_state->setRebuild();
