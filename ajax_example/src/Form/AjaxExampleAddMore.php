@@ -37,6 +37,7 @@ class AjaxExampleAddMore extends FormBase {
 
     // Because we have many fields with the same values, we have to set
     // #tree to be able to access them.
+    $name_field = $form_state->get('num_names');
     $form['#tree'] = TRUE;
     $form['names_fieldset'] = [
       '#type' => 'fieldset',
@@ -48,10 +49,10 @@ class AjaxExampleAddMore extends FormBase {
 
     // Build the fieldset with the proper number of names. We'll use
     // $form_state['num_names'] to determine the number of textfields to build.
-    if (empty($form['num_names'])) {
-      $form['num_names'] = 1;
+    if (empty($name_field)) {
+      $name_field = $form_state->set('num_names', 1);
     }
-    for ($i = 0; $i < $form['num_names']; $i++) {
+    for ($i = 0; $i < $name_field; $i++) {
       $form['names_fieldset']['name'][$i] = [
         '#type' => 'textfield',
         '#title' => t('Name'),
@@ -115,8 +116,10 @@ class AjaxExampleAddMore extends FormBase {
    * Increments the max counter and causes a rebuild.
    */
   public function ajax_example_add_more_add_one($form, &$form_state) {
-    $form['num_names']++;
-    $form_state->setRebuild(TRUE);
+    $name_field = $form_state->get('num_names');
+    $add_button = $name_field + 1;
+    $form_state->set('num_names', $add_button);
+    $form_state->setRebuild();
   }
 
   /**
@@ -125,8 +128,10 @@ class AjaxExampleAddMore extends FormBase {
    * Decrements the max counter and causes a form rebuild.
    */
   public function ajax_example_add_more_remove_one($form, &$form_state) {
-    if ($form['num_names'] > 1) {
-      $form['num_names']--;
+    $name_field = $form_state->get('num_names');
+    if ($name_field > 1) {
+      $remove_button = $name_field - 1;
+      $form_state->set('num_names', $remove_button);
     }
     $form_state->setRebuild(TRUE);
   }
