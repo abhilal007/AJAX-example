@@ -40,11 +40,15 @@ class AjaxExampleWizard extends FormBase {
 
     // $form_state['storage'] has no specific drupal meaning, but it is
     // traditional to keep variables for multistep forms there.
-    $step['step'] = !empty($form_state->getStorage()) ? $form_state->getStorage() : 1 ;
+    //$step['step'] = !empty($form_state->getStorage()) ? $form_state->getStorage() : 1 ;
 
-    $form_state->setStorage($step);
- print_r($step['step']);
-    switch ($step['step']) {
+    //$form_state->setStorage($step);
+    $step_name = $form_state->get('step');
+    if (empty($step_name)) {
+      $step_name = $form_state->set('step', 1);
+    }
+
+    switch ($step_name) {
       case 1:
         $form['step1'] = [
           '#type' => 'fieldset',
@@ -84,13 +88,13 @@ class AjaxExampleWizard extends FormBase {
         ];
         break;
     }
-    if ($step['step'] == 3) {
+    if ($step_name == 3) {
       $form['submit'] = [
         '#type' => 'submit',
         '#value' => t("Submit your information"),
       ];
     }
-    if ($step['step'] < 3) {
+    if ($step_name < 3) {
       $form['next'] = [
         '#type' => 'submit',
         '#value' => t('Next step'),
@@ -100,7 +104,7 @@ class AjaxExampleWizard extends FormBase {
         ],
       ];
     }
-    if ($step['step'] > 1) {
+    if ($step_name > 1) {
       $form['prev'] = [
         '#type' => 'submit',
         '#value' => t("Previous step"),
@@ -159,7 +163,7 @@ class AjaxExampleWizard extends FormBase {
     // Save away the current information.
 
 public function submitForm(array &$form, FormStateInterface $form_state) {
-  $current_step = 'step' . $form_state->getStorage('step');
+  $current_step = 'step' . $form_state->getStorage($step_name);
     if (!empty($form_state->getValue($current_step))) {
       $form_state->getStorage($current_step, $form_state->getValue($current_step));
     }
@@ -169,7 +173,7 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
       //$form_state->getStorage('step')++;
       // If values have already been entered for this step, recover them from
       // $form_state['storage'] to pre-populate them.
-       $step['step'] = $step['step'] + 1;
+       $step_name = $step_name + 1;
       if (!empty($form_state->getStorage($step_name, $form_state->getValue($step_name)))) {
         $form_state->setStorage($step_name, $form_state->getValue($step_name));
       }
@@ -178,7 +182,7 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
       //$form_state['storage']['step']--;
       // Recover our values from $form_state['storage'] to pre-populate them.
       //$step_name = 'step' . $form_state->getStorage('step');
-      $step['step'] = $step['step'] - 1;
+      $step_name = $step_name - 1;
       $form_state->getStorage($step_name, $form_state->getValue($step_name));
     }
 
