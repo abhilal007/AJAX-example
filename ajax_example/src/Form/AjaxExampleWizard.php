@@ -156,24 +156,25 @@ class AjaxExampleWizard extends FormBase {
     }
 
     // Increment or decrement the step as needed. Recover values if they exist.
-    if ($form_state->setTriggeringElement('#value') == t('Next step')) {
-      // $form_state->getStorage('step')++;
+    if ($form_state->getValue() == t('Next step')) {
+      //$form_state->getStorage('step')++;
       // If values have already been entered for this step, recover them from
       // $form_state['storage'] to pre-populate them.
-      $step_name = 'step' . $form_state->getStorage('step');
+       $step['step'] = $step['step'] + 1;
       if (!empty($form_state->getStorage($step_name, $form_state->getValue($step_name)))) {
         $form_state->setStorage($step_name, $form_state->getValue($step_name));
       }
     }
-    if ($form_state->setTriggeringElement('#value') == t('Previous step')) {
-      // $form_state['storage']['step']--;
+    if ($form_state->getValue() == t('Previous step')) {
+      //$form_state['storage']['step']--;
       // Recover our values from $form_state['storage'] to pre-populate them.
-      $step_name = 'step' . $form_state->getStorage('step');
+      //$step_name = 'step' . $form_state->getStorage('step');
+      $step['step'] = $step['step'] - 1;
       $form_state->getStorage($step_name, $form_state->getValue($step_name));
     }
 
     // If they're done, submit.
-    if ($form_state->setTriggeringElement('#value') == t('Submit your information')) {
+    if ($form_state->getValue() == t('Submit your information')) {
       $value_message = t('Your information has been submitted:') . ' ';
       foreach ($form_state->getStorage($form_state->getValue()) as $step => $values) {
         $value_message .= "$step: ";

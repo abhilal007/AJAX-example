@@ -121,6 +121,6 @@ function _ajax_example_dependent_dropdown_degrades_submit(array $form, FormState
  * button click.
  */
 function _ajax_example_wizard_submit($form, &$form_state) {
-  
+
 }
 
