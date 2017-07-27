@@ -34,7 +34,7 @@ class AjaxExampleAutocheckboxes extends FormBase {
       // append, prepend, before and after.
       // 'method' => 'replaceWith',
       // 'effect' defaults to none. Other valid values are 'fade' and 'slide'.
-      // See ajax_example_autotextfields for an example of 'fade'.
+      // See AjaxExampleAutoTextfields for an example of 'fade'.
         'effect' => 'slide',
       // 'speed' defaults to 'slow'. You can also use 'fast'
       // or a number of milliseconds for the animation to last.
@@ -46,12 +46,12 @@ class AjaxExampleAutocheckboxes extends FormBase {
 
     $form['checkboxes_fieldset'] = [
       '#title' => t("Generated Checkboxes"),
-    // The prefix/suffix provide the div that we're replacing, named by
-    // #ajax['wrapper'] above.
+      // The prefix/suffix provide the div that we're replacing, named by
+      // #ajax['wrapper'] above.
       '#prefix' => '<div id="checkboxes-div">',
       '#suffix' => '</div>',
       '#type' => 'fieldset',
-      '#description' => t('This is where we get automatically generated checkboxes'),
+      '#description' => $this->t('This is where we get automatically generated checkboxes'),
     ];
 
     for ($i = 1; $i <= $num_checkboxes; $i++) {
@@ -63,7 +63,7 @@ class AjaxExampleAutocheckboxes extends FormBase {
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => $this->t('Submit'),
     ];
 
     return $form;

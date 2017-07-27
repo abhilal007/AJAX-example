@@ -35,24 +35,24 @@ class AjaxExampleWizard extends FormBase {
     // We want to deal with hierarchical form values.
     $form['#tree'] = TRUE;
     $form['description'] = [
-      '#markup' =>t('This example is a step-by-step wizard. The @link does it without page reloads; the @link1 is the same code but simulates a non-javascript environment, showing it with page reloads.', ['@link' => $linktwo, '@link1' => $link]),
+      '#markup' => t('This example is a step-by-step wizard. The @link does it without page reloads; the @link1 is the same code but simulates a non-javascript environment, showing it with page reloads.', ['@link' => $linktwo, '@link1' => $link]),
     ];
 
     // $form_state['storage'] has no specific drupal meaning, but it is
     // traditional to keep variables for multistep forms there.
-    $step['step'] = !empty($form_state->getStorage()) ? $form_state->getStorage() : 1 ;
+    $step['step'] = !empty($form_state->getStorage()) ? $form_state->getStorage() : 1;
 
     $form_state->setStorage($step);
- print_r($step['step']);
+    print_r($step['step']);
     switch ($step['step']) {
       case 1:
         $form['step1'] = [
           '#type' => 'fieldset',
-          '#title' => t('Step 1: Personal details'),
+          '#title' => $this->t('Step 1: Personal details'),
         ];
         $form['step1']['name'] = [
           '#type' => 'textfield',
-          '#title' => t('Your name'),
+          '#title' => $this->t('Your name'),
           '#default_value' => empty($form_state->getValue(['step1', 'name']) ? '' : $form_state->getValue(['step1', 'name'])),
           '#required' => TRUE,
         ];
@@ -65,7 +65,7 @@ class AjaxExampleWizard extends FormBase {
         ];
         $form['step2']['address'] = [
           '#type' => 'textfield',
-          '#title' => t('Your street address'),
+          '#title' => $this->t('Your street address'),
           '#default_value' => empty($form_state->getValue(['step1', 'address']) ? '' : $form_state->getValue(['step1', 'address'])),
           '#required' => TRUE,
         ];
@@ -74,11 +74,11 @@ class AjaxExampleWizard extends FormBase {
       case 3:
         $form['step3'] = [
           '#type' => 'fieldset',
-          '#title' => t('Step 3: City info'),
+          '#title' => $this->t('Step 3: City info'),
         ];
         $form['step3']['city'] = [
           '#type' => 'textfield',
-          '#title' => t('Your city'),
+          '#title' => $this->t('Your city'),
           '#default_value' => empty($form_state->getValue(['step1', 'city']) ? '' : $form_state->getValue(['step1', 'city'])),
           '#required' => TRUE,
         ];
@@ -87,13 +87,13 @@ class AjaxExampleWizard extends FormBase {
     if ($step['step'] == 3) {
       $form['submit'] = [
         '#type' => 'submit',
-        '#value' => t("Submit your information"),
+        '#value' => $this->t("Submit your information"),
       ];
     }
     if ($step['step'] < 3) {
       $form['next'] = [
         '#type' => 'submit',
-        '#value' => t('Next step'),
+        '#value' => $this->t('Next step'),
         '#ajax' => [
           'wrapper' => 'wizard-form-wrapper',
           'callback' => '::prompt',
@@ -147,26 +147,17 @@ class AjaxExampleWizard extends FormBase {
   }
 
   /**
-   * Submit function for ajax_example_wizard.
-   *
-   * In AJAX this is only submitted when the final submit button is clicked,
-   * but in the non-javascript situation, it is submitted with every
-   * button click.
+   * Save away the current information.
    */
-  public function ajax_example_wizard_submit($form, &$form_state) {
-  }
-
-    // Save away the current information.
-
-public function submitForm(array &$form, FormStateInterface $form_state) {
-  $current_step = 'step' . $form_state->getStorage('step');
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $current_step = 'step' . $form_state->getStorage('step');
     if (!empty($form_state->getValue($current_step))) {
       $form_state->getStorage($current_step, $form_state->getValue($current_step));
     }
 
     // Increment or decrement the step as needed. Recover values if they exist.
     if ($form_state->setTriggeringElement('#value') == t('Next step')) {
-      //$form_state->getStorage('step')++;
+      // $form_state->getStorage('step')++;
       // If values have already been entered for this step, recover them from
       // $form_state['storage'] to pre-populate them.
       $step_name = 'step' . $form_state->getStorage('step');
@@ -175,7 +166,7 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
       }
     }
     if ($form_state->setTriggeringElement('#value') == t('Previous step')) {
-      //$form_state['storage']['step']--;
+      // $form_state['storage']['step']--;
       // Recover our values from $form_state['storage'] to pre-populate them.
       $step_name = 'step' . $form_state->getStorage('step');
       $form_state->getStorage($step_name, $form_state->getValue($step_name));
@@ -198,5 +189,5 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
     // Otherwise, we still have work to do.
     $form_state->setRebuild(TRUE);
   }
-}
 
+}

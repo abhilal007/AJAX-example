@@ -21,7 +21,7 @@ class AjaxExampleDependentDropdown extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $options_first = $this->_ajax_example_get_first_dropdown_options();
+    $options_first = _ajax_example_get_first_dropdown_options();
     // If we have a value for the first dropdown from $form_state['values'] we use
     // this both as the default value for the first dropdown and also as a
     // parameter to pass to the function that retrieves the options for the
@@ -30,7 +30,7 @@ class AjaxExampleDependentDropdown extends FormBase {
 
     $form['dropdown_first'] = [
       '#type' => 'select',
-      '#title' => 'Instrument Type',
+      '#title' => $this->t('Instrument Type'),
       '#options' => $options_first,
       '#default_value' => $selected,
     // Bind an ajax callback to the change event (which is the default for the
@@ -49,19 +49,19 @@ class AjaxExampleDependentDropdown extends FormBase {
 
     $form['dropdown_second'] = [
       '#type' => 'select',
-      '#title' => $options_first[$selected] . ' ' . t('Instruments'),
+      '#title' => $options_first[$selected] . ' ' . $this->t('Instruments'),
     // The entire enclosing div created here gets replaced when dropdown_first
     // is changed.
       '#prefix' => '<div id="dropdown-second-replace">',
       '#suffix' => '</div>',
     // When the form is rebuilt during ajax processing, the $selected variable
     // will now have the new value and so the options will change.
-      '#options' => $this->_ajax_example_get_second_dropdown_options($selected),
+      '#options' => _ajax_example_get_second_dropdown_options($selected),
       '#default_value' => !empty($form_state->getValue('dropdown_second')) ? $form_state->getValue('dropdown_second') : '',
     ];
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => $this->t('Submit'),
     ];
     return $form;
   }
@@ -77,77 +77,6 @@ class AjaxExampleDependentDropdown extends FormBase {
    */
   public function prompt($form, FormStateInterface $form_state) {
     return $form['dropdown_second'];
-  }
-
-  /**
-   *
-   */
-  public function _ajax_example_get_first_dropdown_options() {
-
-    return
-    [
-      'String' => 'String',
-      'Woodwind' => 'Woodwind',
-      'Brass' => 'Brass',
-      'Percussion' => 'Percussion',
-
-    ];
-  }
-
-  /**
-   * Helper function to populate the second dropdown.
-   *
-   * This would normally be pulling data from the database.
-   *
-   * @param string $key
-   *   This will determine which set of options is returned.
-   *
-   * @return array
-   *   Dropdown options
-   */
-  public function _ajax_example_get_second_dropdown_options($key = '') {
-    switch ($key) {
-      case 'String':
-        $options = [
-          'Violin' => 'Violin',
-          'Viola' => 'Viola',
-          'Cello' => 'Cello',
-          'Double Bass' => 'Double Bass',
-        ];
-
-        return $options;
-
-      case 'Woodwind':
-        $options = [
-          'Flute' => 'Flute',
-          'Clarinet' => 'Clarinet',
-          'Oboe' => 'Oboe',
-          'Bassoon' => 'Bassoon',
-        ];
-        return $options;
-
-      case 'Brass':
-        $options = [
-          'Trumpet' => 'Trumpet',
-          'Trombone' => 'Trombone',
-          'French Horn' => 'French Horn',
-          'Euphonium' => 'Euphonium',
-        ];
-        return $options;
-
-      case 'Percussion':
-        $options = [
-          'Bass Drum' => 'Bass Drum',
-          'Timpani' => 'Timpani',
-          'Snare Drum' => 'Snare Drum',
-          'Tambourine' => 'Tambourine',
-        ];
-        return $options;
-
-      default:
-        return 'none';
-
-    }
   }
 
 }

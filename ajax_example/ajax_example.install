@@ -9,38 +9,38 @@
  * Implements hook_schema().
  */
 function ajax_example_schema() {
-  $schema['ajax_example_node_form_alter'] = array(
+  $schema['ajax_example_node_form_alter'] = [
     'description' => 'Stores example settings for nodes.',
-    'fields' => array(
-      'nid' => array(
+    'fields' => [
+      'nid' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'description' => 'The {node}.nid to store settings.',
-      ),
-      'example_1' => array(
+      ],
+      'example_1' => [
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'description' => 'Node Form Example 1 checkbox',
-      ),
-      'example_2' => array(
+      ],
+      'example_2' => [
         'type' => 'varchar',
         'length' => 256,
         'not null' => FALSE,
         'default' => '',
         'description' => 'Node Form Example 2 textfield',
-      ),
-    ),
-    'primary key' => array('nid'),
-    'foreign keys' => array(
-      'dnv_node' => array(
+      ],
+    ],
+    'primary key' => ['nid'],
+    'foreign keys' => [
+      'dnv_node' => [
         'table' => 'node',
-        'columns' => array('nid' => 'nid'),
-      ),
-    ),
-  );
+        'columns' => ['nid' => 'nid'],
+      ],
+    ],
+  ];
   return $schema;
 }
 

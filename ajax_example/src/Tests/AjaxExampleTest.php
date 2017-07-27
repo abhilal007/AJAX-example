@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\ajax_example\Tests\AjaxExampleTest.
- */
-
 namespace Drupal\ajax_example\Tests;
 
 use Drupal\simpletest\WebTestBase;
@@ -16,7 +11,6 @@ use Drupal\simpletest\WebTestBase;
  * @group ajax_example
  * @group examples
  */
-
 class AjaxExampleTest extends WebTestBase {
 
   /**
@@ -24,7 +18,7 @@ class AjaxExampleTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('ajax_example');
+  public static $modules = ['ajax_example'];
 
   /**
    * Tests presence of ajax_example landing page.

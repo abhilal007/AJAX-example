@@ -23,7 +23,7 @@ class AjaxExampleAutotextfields extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['ask_first_name'] = [
       '#type' => 'checkbox',
-      '#title' => t('Ask me my first name'),
+      '#title' => $this->t('Ask me my first name'),
       '#ajax' => [
         'callback' => '::prompt',
         'wrapper' => 'textfields',
@@ -32,7 +32,7 @@ class AjaxExampleAutotextfields extends FormBase {
     ];
     $form['ask_last_name'] = [
       '#type' => 'checkbox',
-      '#title' => t('Ask me my last name'),
+      '#title' => $this->t('Ask me my last name'),
       '#ajax' => [
         'callback' => '::prompt',
         'wrapper' => 'textfields',
@@ -41,7 +41,7 @@ class AjaxExampleAutotextfields extends FormBase {
     ];
 
     $form['textfields'] = [
-      '#title' => t("Generated text fields for first and last name"),
+      '#title' => $this->t("Generated text fields for first and last name"),
       '#prefix' => '<div id="textfields">',
       '#suffix' => '</div>',
       '#type' => 'fieldset',
@@ -53,19 +53,19 @@ class AjaxExampleAutotextfields extends FormBase {
     if (!empty($form_state->getValue('ask_first_name')) && $form_state->getValue('ask_first_name')) {
       $form['textfields']['first_name'] = [
         '#type' => 'textfield',
-        '#title' => t('First Name'),
+        '#title' => $this->t('First Name'),
       ];
     }
     if (!empty($form_state->getValue('ask_last_name')) && $form_state->getValue('ask_last_name')) {
       $form['textfields']['last_name'] = [
         '#type' => 'textfield',
-        '#title' => t('Last Name'),
+        '#title' => $this->t('Last Name'),
       ];
     }
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Click Me'),
+      '#value' => $this->t('Click Me'),
     ];
 
     return $form;

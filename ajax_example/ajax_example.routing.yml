@@ -25,7 +25,7 @@ ajax_example.progresssbar:
 ajax_example.progresssbarProgress:
   path: 'examples/ajax_example/progressbar/progress/{time}'
   defaults:
-    _controller: '\Drupal\ajax_example\Controller\AjaxExampleController::ajax_example_progressbar_progress'
+    _controller: '\Drupal\ajax_example\Controller\AjaxExampleController::progressbarProgress'
     _title: 'Progress bar Progress'
      # We provide default value to both arguments.
     time: ''
@@ -131,4 +131,3 @@ ajax_example.Addmorenojs:
     no_js_use: TRUE
   requirements:
     _access: 'TRUE'
-

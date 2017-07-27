@@ -4,7 +4,7 @@
  * @file
  * AJAX Examples module file with basic examples.
  */
-
+use Drupal\Core\Form\FormStateInterface;
 /**
  * @defgroup ajax_example Example: AJAX
  * @ingroup examples
@@ -21,3 +21,106 @@
 /**
  * @} End of "defgroup ajax_example".
  */
+
+/**
+ * Helper function to populate the first dropdown.
+ *
+ * This would normally be pulling data from the database.
+ *
+ * @return array
+ *   Dropdown options.
+ */
+function _ajax_example_get_first_dropdown_options() {
+  return [
+    'String' => 'String',
+    'Woodwind' => 'Woodwind',
+    'Brass' => 'Brass',
+    'Percussion' => 'Percussion',
+  ];
+}
+
+/**
+ * Helper function to populate the second dropdown.
+ *
+ * This would normally be pulling data from the database.
+ *
+ * @param string $key
+ *   This will determine which set of options is returned.
+ *
+ * @return array
+ *   Dropdown options
+ */
+function _ajax_example_get_second_dropdown_options($key = '') {
+  switch ($key) {
+    case 'String':
+      $options = [
+        'Violin' => 'Violin',
+        'Viola' => 'Viola',
+        'Cello' => 'Cello',
+        'Double Bass' => 'Double Bass',
+      ];
+      break;
+    case 'Woodwind':
+      $options = [
+        'Flute' => 'Flute',
+        'Clarinet' => 'Clarinet',
+        'Oboe' => 'Oboe',
+        'Bassoon' => 'Bassoon',
+      ];
+      break;
+    case 'Brass':
+      $options = [
+        'Trumpet' => 'Trumpet',
+        'Trombone' => 'Trombone',
+        'French Horn' => 'French Horn',
+        'Euphonium' => 'Euphonium',
+      ];
+      break;
+    case 'Percussion':
+      $options = [
+        'Bass Drum' => 'Bass Drum',
+        'Timpani' => 'Timpani',
+        'Snare Drum' => 'Snare Drum',
+        'Tambourine' => 'Tambourine',
+      ];
+      break;
+    default:
+      $options = ['none' => 'none'];
+      break;
+  }
+  return $options;
+}
+
+/**
+ * Submit function for AjaxExampleDependentDropdownDegrades::prompt().
+ */
+function _ajax_example_dependent_dropdown_degrades_submit(array $form, FormStateInterface $form_state) {
+
+  // Now handle the case of the next, previous, and submit buttons.
+  // only submit will result in actual submission, all others rebuild.
+  $trigger = $form_state->getTriggeringElement();
+  switch ($trigger) {
+    case t('OK'):
+      // Submit: We're done.
+      drupal_set_message($this->t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', [
+        '@first' => $form_state['values']['dropdown_first'],
+        '@second' => $form_state['values']['dropdown_second']
+      ]));
+      return;
+  }
+  // 'Choose' or anything else will cause rebuild of the form and present
+  // it again.
+  $form_state->setRebuild();
+}
+
+/**
+ * Submit function for ajax_example_wizard.
+ *
+ * In AJAX this is only submitted when the final submit button is clicked,
+ * but in the non-javascript situation, it is submitted with every
+ * button click.
+ */
+function _ajax_example_wizard_submit($form, &$form_state) {
+  
+}
+

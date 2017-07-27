@@ -1,43 +1,60 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ajax_example\Controller\AjaxExampleController.
- */
-
 namespace Drupal\ajax_example\Controller;
 
-use \Drupal\Core\Url;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\examples\Utility\DescriptionTemplateTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Controller routines for block example routes.
  */
-class AjaxExampleController extends ControllerBase{
+class AjaxExampleController extends ControllerBase {
+  use DescriptionTemplateTrait;
 
   /**
-   * A simple controller method to explain what the block example is about.
+   * {@inheritdoc}
    */
-  public function description() {
-    $output['intro']['#markup'] = $this->t('The AJAX example module provides many examples of AJAX including forms, links, and AJAX commands.');
-    $output['list']['#theme'] = 'item_list';
-    $output['list']['#items'][] = \Drupal::l(t('Simplest AJAX Example'), Url::fromRoute('ajax_example.simplest'));
-    return $output;
-  }
-public function ajax_example_progressbar_progress($time = '') {
-
-  $progress = array(
-    'message' => $this->t('Starting execute...'),
-    'percentage' => -1,
-  );
-
-  $completed_percentage = \Drupal::config('ajaxexample.settings')->get($variable_name);
-  if ($completed_percentage) {
-    $progress['message'] = $this->t('Executing...');
-    $progress['percentage'] = $completed_percentage;
+  protected function getModuleName() {
+    return 'ajax_example';
   }
 
-  return new JsonResponse($progress);
-}
+  /**
+   * Get the progress bar execution status, as JSON.
+   *
+   * This is the menu handler for
+   * examples/ajax_example/progressbar/progress/$time.
+   *
+   * This function is our wholly arbitrary job that we're checking the status for.
+   * In this case, we're reading a system variable that is being updated by
+   * ajax_example_progressbar_callback().
+   *
+   * We set up the AJAX progress bar to check the status every second, so this
+   * will execute about once every second.
+   *
+   * The progress bar JavaScript accepts two values: message and percentage. We
+   * set those in an array and in the end convert it JSON for sending back to the
+   * client-side JavaScript.
+   *
+   * @param int $time
+   *   Timestamp.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   */
+  public function progressbarProgress($time) {
+    $progress = [
+      'message' => t('Starting execute...'),
+      'percentage' => -1,
+    ];
+
+    $completed_percentage = \Drupal::config('ajaxexample.settings')->get('example_progressbar_' . $time);
+
+    if ($completed_percentage) {
+      $progress['message'] = t('Executing...');
+      $progress['percentage'] = $completed_percentage;
+    }
+
+    return new JsonResponse($progress);
+  }
+
 }

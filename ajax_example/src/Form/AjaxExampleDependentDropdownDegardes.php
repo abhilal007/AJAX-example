@@ -21,7 +21,7 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $no_js_use = FALSE) {
-    $options_first = $this->_ajax_example_get_first_dropdown_options();
+    $options_first = _ajax_example_get_first_dropdown_options();
 
     // If we have a value for the first dropdown from $form_state['values'] we use
     // this both as the default value for the first dropdown and also as a
@@ -40,7 +40,7 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
     ];
     $form['dropdown_first_fieldset']['dropdown_first'] = [
       '#type' => 'select',
-      '#title' => 'Instrument Type',
+      '#title' => $this->t('Instrument Type'),
       '#options' => $options_first,
       '#attributes' => ['class' => ['enabled-for-ajax']],
 
@@ -65,7 +65,7 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
     // this element, then hide it with with css if javascript is enabled.
     $form['dropdown_first_fieldset']['continue_to_second'] = [
       '#type' => 'submit',
-      '#value' => t('Choose'),
+      '#value' => $this->t('Choose'),
       '#attributes' => ['class' => ['next-button']],
     ];
 
@@ -75,18 +75,18 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
     ];
     $form['dropdown_second_fieldset']['dropdown_second'] = [
       '#type' => 'select',
-      '#title' => $options_first[$selected] . ' ' . t('Instruments'),
+      '#title' => $options_first[$selected] . ' ' . $this->t('Instruments'),
       '#prefix' => '<div id="dropdown-second-replace">',
       '#suffix' => '</div>',
       '#attributes' => ['class' => ['enabled-for-ajax']],
     // When the form is rebuilt during processing (either AJAX or multistep),
     // the $selected variable will now have the new value and so the options
     // will change.
-      '#options' => $this->_ajax_example_get_second_dropdown_options($selected),
+      '#options' => _ajax_example_get_second_dropdown_options($selected),
     ];
     $form['dropdown_second_fieldset']['submit'] = [
       '#type' => 'submit',
-      '#value' => t('OK'),
+      '#value' => $this->t('OK'),
     // This class allows attached js file to override the disabled attribute,
     // since it's not necessary in ajax-enabled form.
       '#attributes' => ['class' => ['enabled-for-ajax']],
@@ -96,19 +96,9 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
     if (empty($form_state->getValue('dropdown_first'))) {
       $form['dropdown_second_fieldset']['dropdown_second']['#disabled'] = TRUE;
       $form['dropdown_second_fieldset']['submit']['#disabled'] = FALSE;
-      $form['dropdown_second_fieldset']['dropdown_second']['#description'] = t('You must make your choice on the first dropdown before changing this second one.');
+      $form['dropdown_second_fieldset']['dropdown_second']['#description'] = $this->t('You must make your choice on the first dropdown before changing this second one.');
     }
     return $form;
-  }
-
-  /**
-   * Submit function for ajax_example_dependent_dropdown_degrades().
-   */
-  public function ajax_example_dependent_dropdown_degrades_submit($form, &$form_state) {
-
-    // Now handle the case of the next, previous, and submit buttons.
-    // only submit will result in actual submission, all others rebuild.
-
   }
 
   /**
@@ -117,110 +107,37 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
    * @return array
    *   Renderable array (the second dropdown).
    */
-  public function prompt($form, $form_state) {
+  public function prompt(array $form, FormStateInterface $form_state) {
     return $form['dropdown_second_fieldset']['dropdown_second'];
 
   }
 
-    /**
+  /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    //switch ($form_state->getTriggeringElement()) {
-      //case t('OK'):
-        // Submit: We're done.
-        if($form_state->getValue('continue_to_second') == 'Choose'){
-          //print_r("Why is this");
-          $form_state->setRebuild();
-          if ($form_state->getValue('dropdown_second')== ''){
-            return;
-          }
-
-
-        }
-
-        if($form_state->getValue('submit') == 'OK'){
-        drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
+    // Switch ($form_state->getTriggeringElement()) {
+    // case t('OK'):
+    // Submit: We're done.
+    if ($form_state->getValue('continue_to_second') == 'Choose') {
+      // print_r("Why is this");.
+      $form_state->setRebuild();
+      if ($form_state->getValue('dropdown_second') == '') {
         return;
       }
-      //default:
-        //drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
-        //return;
 
+    }
 
+    if ($form_state->getValue('submit') == 'OK') {
+      drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
+      return;
+    }
+    // default:
+    // drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
+    // return;
     // 'Choose' or anything else will cause rebuild of the form and present
     // it again.
     $form_state->setRebuild();
   }
 
- /**
-   *
-   */
-  public function _ajax_example_get_first_dropdown_options() {
-
-    return
-    [
-      'String' => 'String',
-      'Woodwind' => 'Woodwind',
-      'Brass' => 'Brass',
-      'Percussion' => 'Percussion',
-
-    ];
-  }
-
-  /**
-   * Helper function to populate the second dropdown.
-   *
-   * This would normally be pulling data from the database.
-   *
-   * @param string $key
-   *   This will determine which set of options is returned.
-   *
-   * @return array
-   *   Dropdown options
-   */
-  public function _ajax_example_get_second_dropdown_options($key = '') {
-    switch ($key) {
-      case 'String':
-        $options = [
-          'Violin' => 'Violin',
-          'Viola' => 'Viola',
-          'Cello' => 'Cello',
-          'Double Bass' => 'Double Bass',
-        ];
-
-        return $options;
-
-      case 'Woodwind':
-        $options = [
-          'Flute' => 'Flute',
-          'Clarinet' => 'Clarinet',
-          'Oboe' => 'Oboe',
-          'Bassoon' => 'Bassoon',
-        ];
-        return $options;
-
-      case 'Brass':
-        $options = [
-          'Trumpet' => 'Trumpet',
-          'Trombone' => 'Trombone',
-          'French Horn' => 'French Horn',
-          'Euphonium' => 'Euphonium',
-        ];
-        return $options;
-
-      case 'Percussion':
-        $options = [
-          'Bass Drum' => 'Bass Drum',
-          'Timpani' => 'Timpani',
-          'Snare Drum' => 'Snare Drum',
-          'Tambourine' => 'Tambourine',
-        ];
-        return $options;
-
-      default:
-        return 'none';
-
-    }
-  }
 }

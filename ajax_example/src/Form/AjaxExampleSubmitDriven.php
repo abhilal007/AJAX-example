@@ -34,7 +34,7 @@ class AjaxExampleSubmitDriven extends FormBase {
         'callback' => '::prompt',
         'wrapper' => 'box',
       ],
-      '#value' => t('Submit'),
+      '#value' => $this->t('Submit'),
     ];
 
     return $form;
@@ -55,7 +55,7 @@ class AjaxExampleSubmitDriven extends FormBase {
    * @return array
    *   Renderable array (the box element)
    */
-  public function prompt($form, $form_state) {
+  public function prompt(array &$form, FormStateInterface $form_state) {
     // In most cases, it is recommended that you put this logic in form generation
     // rather than the callback. Submit driven forms are an exception, because
     // you may not want to return the form at all.
