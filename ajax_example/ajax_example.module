@@ -94,24 +94,6 @@ function _ajax_example_get_second_dropdown_options($key = '') {
 /**
  * Submit function for AjaxExampleDependentDropdownDegrades::prompt().
  */
-function _ajax_example_dependent_dropdown_degrades_submit(array $form, FormStateInterface $form_state) {
-
-  // Now handle the case of the next, previous, and submit buttons.
-  // only submit will result in actual submission, all others rebuild.
-  $trigger = $form_state->getTriggeringElement();
-  switch ($trigger) {
-    case t('OK'):
-      // Submit: We're done.
-      drupal_set_message($this->t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', [
-        '@first' => $form_state['values']['dropdown_first'],
-        '@second' => $form_state['values']['dropdown_second']
-      ]));
-      return;
-  }
-  // 'Choose' or anything else will cause rebuild of the form and present
-  // it again.
-  $form_state->setRebuild();
-}
 
 /**
  * Submit function for ajax_example_wizard.
@@ -120,7 +102,5 @@ function _ajax_example_dependent_dropdown_degrades_submit(array $form, FormState
  * but in the non-javascript situation, it is submitted with every
  * button click.
  */
-function _ajax_example_wizard_submit($form, &$form_state) {
 
-}
 

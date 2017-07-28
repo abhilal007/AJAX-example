@@ -119,7 +119,22 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
     // Switch ($form_state->getTriggeringElement()) {
     // case t('OK'):
     // Submit: We're done.
-    if ($form_state->getValue('continue_to_second') == 'Choose') {
+    $trigger = $form_state->getTriggeringElement()['#value'];
+    switch($trigger){
+    case 'Choose':
+      $form_state->setRebuild();
+      break;
+    case 'OK':
+      drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
+      break;
+
+
+      }
+
+
+
+
+    /*if ($form_state->getValue('continue_to_second') == 'Choose') {
       // print_r("Why is this");.
       $form_state->setRebuild();
       if ($form_state->getValue('dropdown_second') == '') {
@@ -131,7 +146,7 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
     if ($form_state->getValue('submit') == 'OK') {
       drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
       return;
-    }
+    }*/
     // default:
     // drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
     // return;

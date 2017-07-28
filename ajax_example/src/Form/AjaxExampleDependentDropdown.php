@@ -70,6 +70,19 @@ class AjaxExampleDependentDropdown extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $trigger = (string)$form_state->getTriggeringElement()['#value'];
+  switch ($trigger) {
+      case 'Submit':
+      // Submit: We're done.
+      drupal_set_message($this->t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', [
+        '@first' => $form_state->getValue('dropdown_first'),
+        '@second' => $form_state->getValue('dropdown_second'),
+      ]));
+      return;
+  }
+  // 'Choose' or anything else will cause rebuild of the form and present
+  // it again.
+  $form_state->setRebuild();
   }
 
   /**
