@@ -40,10 +40,10 @@ class AjaxExampleWizard extends FormBase {
 
     // $form_state['storage'] has no specific drupal meaning, but it is
     // traditional to keep variables for multistep forms there.
-    $step['step'] = !empty($form_state->getStorage()) ? $form_state->getStorage() : 1;
+    $step['step'] = !empty($form_state->getStorage('step')) ? $form_state->getStorage('step') : 1;
 
     $form_state->setStorage($step);
-    print_r($step['step']);
+
     switch ($step['step']) {
       case 1:
         $form['step1'] = [
@@ -150,45 +150,49 @@ class AjaxExampleWizard extends FormBase {
    * Save away the current information.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $current_step = 'step' . $form_state->getStorage('step');
-    if (!empty($form_state->getValue($current_step))) {
-      $form_state->getStorage($current_step, $form_state->getValue($current_step));
-    }
+$current_step = 'step' . $form_state->getStorage('step');
+  if (!empty($form_state->getValue($current_step))) {
+     $form_state->getStorage($current_step, $form_state->getValue($current_step));
+  }
 
-    // Increment or decrement the step as needed. Recover values if they exist.
-    if ($form_state->getValue() == t('Next step')) {
-      //$form_state->getStorage('step')++;
-      // If values have already been entered for this step, recover them from
-      // $form_state['storage'] to pre-populate them.
-       $step['step'] = $step['step'] + 1;
-      if (!empty($form_state->getStorage($step_name, $form_state->getValue($step_name)))) {
-        $form_state->setStorage($step_name, $form_state->getValue($step_name));
+  // Increment or decrement the step as needed. Recover values if they exist.
+  if ($form_state->getTriggeringElement()['#value'] == $this->t('Next step')) {
+    $val=$form_state->getStorage('step');
+   $val++;
+   print_r($val);
+   $form_state->setStorage(['step'], $val);
+    // If values have already been entered for this step, recover them from
+    // $form_state['storage'] to pre-populate them.
+    $step_name = 'step' . $form_state->getStorage('step');
+    if (!empty($form_state->getStorage($step_name, $form_state->getValue($step_name)))) {
+      $form_state->setStorage($step_name, $form_state->getValue($step_name));
+    }
+  }
+  if ($form_state->getTriggeringElement()['#value'] == $this->t('Previous step')) {
+    $val=$form_state->getStorage('step');
+    $val--;
+   $form_state->setStorage(['step'], $val);
+    // Recover our values from $form_state['storage'] to pre-populate them.
+    $step_name = 'step' . $form_state->getStorage('step');
+    $form_state->setStorage($step_name, $form_state->getValue($step_name));
+  }
+
+  // If they're done, submit.
+  if ($form_state->getTriggeringElement()['#value'] == $this->t('Submit your information')) {
+    $value_message = $this->t('Your information has been submitted:') . ' ';
+    foreach ($form_state->getStorage('value') as $step => $values) {
+      $value_message .= "$step: ";
+      foreach ($values as $key => $value) {
+        $value_message .= "$key=$value, ";
       }
     }
-    if ($form_state->getValue() == t('Previous step')) {
-      //$form_state['storage']['step']--;
-      // Recover our values from $form_state['storage'] to pre-populate them.
-      //$step_name = 'step' . $form_state->getStorage('step');
-      $step['step'] = $step['step'] - 1;
-      $form_state->getStorage($step_name, $form_state->getValue($step_name));
-    }
+    drupal_set_message($value_message);
+    $form_state->setRebuild(FALSE);
+    return;
+  }
 
-    // If they're done, submit.
-    if ($form_state->getValue() == t('Submit your information')) {
-      $value_message = t('Your information has been submitted:') . ' ';
-      foreach ($form_state->getStorage($form_state->getValue()) as $step => $values) {
-        $value_message .= "$step: ";
-        foreach ($values as $key => $value) {
-          $value_message .= "$key=$value, ";
-        }
-      }
-      drupal_set_message($value_message);
-      $form_state->setRebuild(FALSE);
-      return;
-    }
-
-    // Otherwise, we still have work to do.
-    $form_state->setRebuild(TRUE);
+  // Otherwise, we still have work to do.
+  $form_state->setRebuild(TRUE);
   }
 
 }
