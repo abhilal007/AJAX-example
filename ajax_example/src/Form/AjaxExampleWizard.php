@@ -123,6 +123,7 @@ class AjaxExampleWizard extends FormBase {
       return;
     }
     else {
+      print_r($step);
       $response = new AjaxResponse();
       $step = $form_state->getValue('step');
       // Increment or decrement the step as needed. Recover values if they exist.
@@ -132,6 +133,7 @@ class AjaxExampleWizard extends FormBase {
       elseif ($form_state->getTriggeringElement()['#value']->__toString() == $this->t('Previous step')) {
         $step--;
       }
+
       switch ($step) {
         case 1:
           $form['step1'] = [
@@ -150,6 +152,10 @@ class AjaxExampleWizard extends FormBase {
           break;
 
         case 2:
+
+        unset($form['step1']);
+        unset($form['next']);
+
           $form['step2'] = [
             '#type' => 'fieldset',
             '#title' => t('Step 2: Street address info'),
@@ -166,6 +172,8 @@ class AjaxExampleWizard extends FormBase {
           break;
 
         case 3:
+        $form_state->setRebuild();
+        unset($form['step2']);
           $form['step3'] = [
             '#type' => 'fieldset',
             '#title' => $this->t('Step 3: City info'),
@@ -182,6 +190,7 @@ class AjaxExampleWizard extends FormBase {
           break;
       }
       if ($step == 3) {
+
         $form['submit'] = [
           '#type' => 'submit',
           '#value' => $this->t("Submit your information"),
