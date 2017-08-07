@@ -2,11 +2,13 @@
 
 namespace Drupal\ajax_example\Form;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\HtmlCommand;
 
 /**
@@ -34,8 +36,8 @@ class AjaxExampleWizard extends FormBase {
     $linktwo = Link::fromTextAndUrl($this->t('examples/ajax-example/wizard'), $urltwo)
       ->toString();
 
-    $form['#prefix'] = '<div id="wizard-form-wrapper">';
-    $form['#suffix'] = '</div>';
+//    $form['#prefix'] = '<div id="wizard-form-wrapper">';
+//    $form['#suffix'] = '</div>';
     // We want to deal with hierarchical form values.
     $form['#tree'] = TRUE;
     $form['description'] = [
@@ -51,28 +53,30 @@ class AjaxExampleWizard extends FormBase {
     ];
     print_r($form_state->getValue('step'));
 
-    $form['step1'] = [
-      '#type' => 'fieldset',
-      '#title' => $this->t('Step 1: Personal details'),
-    ];
-    $form['step1']['name'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Your name'),
-      '#default_value' => empty($form_state->getValue([
-        'step1',
-        'name',
-      ]) ? '' : $form_state->getValue(['step1', 'name'])),
-      '#required' => TRUE,
-    ];
+    if ($form['step']['#value'] == 1) {
+      $form['step1'] = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('Step 1: Personal details'),
+      ];
+      $form['step1']['name'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Your name'),
+        '#default_value' => empty($form_state->getValue([
+          'step1',
+          'name',
+        ]) ? '' : $form_state->getValue(['step1', 'name'])),
+        '#required' => TRUE,
+      ];
 
-    $form['next'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Next step'),
-      '#ajax' => [
-        'wrapper' => 'wizard-form-wrapper',
-        'callback' => '::submitForm',
-      ],
-    ];
+      $form['next'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Next step'),
+        '#ajax' => [
+          'wrapper' => 'ajax-example-wizard',
+          'callback' => '::prompt',
+        ],
+      ];
+    }
 
 
     // This simply allows us to demonstrate no-javascript use without
@@ -123,8 +127,6 @@ class AjaxExampleWizard extends FormBase {
       return;
     }
     else {
-      print_r($step);
-      $response = new AjaxResponse();
       $step = $form_state->getValue('step');
       // Increment or decrement the step as needed. Recover values if they exist.
       if ($form_state->getTriggeringElement()['#value']->__toString() == $this->t('Next step')) {
@@ -149,13 +151,12 @@ class AjaxExampleWizard extends FormBase {
             ]) ? '' : $form_state->getValue(['step1', 'name'])),
             '#required' => TRUE,
           ];
+          $form_state->setValue('step', 1);
           break;
 
         case 2:
-
-        unset($form['step1']);
-        unset($form['next']);
-
+          unset($form['step1']);
+          unset($form['next']);
           $form['step2'] = [
             '#type' => 'fieldset',
             '#title' => t('Step 2: Street address info'),
@@ -164,16 +165,16 @@ class AjaxExampleWizard extends FormBase {
             '#type' => 'textfield',
             '#title' => $this->t('Your street address'),
             '#default_value' => empty($form_state->getValue([
-              'step1',
+              'step2',
               'address',
-            ]) ? '' : $form_state->getValue(['step1', 'address'])),
+            ]) ? '' : $form_state->getValue(['step2', 'address'])),
             '#required' => TRUE,
           ];
+          $form_state->setValue('step', $step);
           break;
 
         case 3:
-        $form_state->setRebuild();
-        unset($form['step2']);
+
           $form['step3'] = [
             '#type' => 'fieldset',
             '#title' => $this->t('Step 3: City info'),
@@ -182,11 +183,12 @@ class AjaxExampleWizard extends FormBase {
             '#type' => 'textfield',
             '#title' => $this->t('Your city'),
             '#default_value' => empty($form_state->getValue([
-              'step1',
+              'step3',
               'city',
-            ]) ? '' : $form_state->getValue(['step1', 'city'])),
+            ]) ? '' : $form_state->getValue(['step3', 'city'])),
             '#required' => TRUE,
           ];
+          $form_state->setValue('step', $step);
           break;
       }
       if ($step == 3) {
@@ -196,32 +198,33 @@ class AjaxExampleWizard extends FormBase {
           '#value' => $this->t("Submit your information"),
         ];
       }
-      if ($step < 3) {
-        $form['next'] = [
-          '#type' => 'submit',
-          '#value' => $this->t('Next step'),
-          '#ajax' => [
-            'wrapper' => 'wizard-form-wrapper',
-            'callback' => '::submitForm',
-          ],
-        ];
-      }
-      if ($step > 1) {
+      if ($step > 1 && !isset($form['prev'])) {
         $form['prev'] = [
           '#type' => 'submit',
           '#value' => t("Previous step"),
-
           // Since all info will be discarded, don't validate on 'prev'.
           '#limit_validation_errors' => [],
           // #submit is required to use #limit_validation_errors.
           '#submit' => ['ajax_example_wizard_submit'],
           '#ajax' => [
-            'wrapper' => 'wizard-form-wrapper',
-            'callback' => '::submitForm',
+            'wrapper' => 'ajax-example-wizard',
+            'callback' => '::prompt',
           ],
         ];
       }
-      $response->addCommand(new HtmlCommand('#wizard-form-wrapper', $form));
+      if ($step < 3 && !isset($form['next'])) {
+        $form['next'] = [
+          '#type' => 'submit',
+          '#value' => $this->t('Next step'),
+          '#limit_validation_errors' => [],
+          '#ajax' => [
+            'wrapper' => 'ajax-example-wizard',
+            'callback' => '::prompt',
+          ],
+        ];
+      }
+      $response = new AjaxResponse();
+      $response->addCommand(new HtmlCommand('#ajax-example-wizard', $form));
       return $response;
     }
 
