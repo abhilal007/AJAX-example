@@ -132,10 +132,10 @@ ajax_example.Addmorenojs:
   requirements:
     _access: 'TRUE'
 
-#ajax_example.Advanced:
- # path: 'examples/ajax-example/advanced-commands'
-  #defaults:
-   # _form: '\Drupal\ajax_example\Form\AjaxExampleAdvanced'
-    #_title: 'AJAX framework commands'
-  #requirements:
-   # _access: 'TRUE'
+ajax_example.Advanced:
+  path: 'examples/ajax-example/advanced-commands'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleAdvancedCommands'
+    _title: 'AJAX framework commands'
+  requirements:
+    _access: 'TRUE'

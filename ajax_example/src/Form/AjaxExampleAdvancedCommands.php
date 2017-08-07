@@ -8,7 +8,7 @@ use Drupal\Core\Ajax;
 /**
  *
  */
-class AjaxExampleAdvanced extends FormBase {
+class AjaxExampleAdvancedCommands extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -200,7 +200,7 @@ class AjaxExampleAdvanced extends FormBase {
 
     $form['restripe_command_example_fieldset']['restripe_num_rows'] = [
       '#type' => 'select',
-      '#default_value' => !empty($form_state['values']['restripe_num_rows']) ? $form_state['values']['restripe_num_rows'] : 1,
+      '#default_value' => !empty($form_state->getValue('restripe_num_rows')) ? $form_state->getValue('restripe_num_rows') : 1,
       '#options' => [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5,  6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10],
       '#ajax' => [
         'callback' => '::ajax_example_advanced_commands_restripe_num_rows',
