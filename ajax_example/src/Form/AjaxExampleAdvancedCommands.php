@@ -5,6 +5,18 @@ namespace Drupal\ajax_example\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\AlertCommand;
+use Drupal\Core\Ajax\AppendCommand;
+use Drupal\Core\Ajax\BeforeCommand;
+use Drupal\Core\Ajax\AfterCommand;
+use Drupal\Core\Ajax\ChangedCommand;
+use Drupal\Core\Ajax\DataCommand;
+use Drupal\Core\Ajax\PrependCommand;
+use Drupal\Core\Ajax\RemoveCommand;
+use Drupal\Core\Ajax\RestripeCommand;
 /**
  *
  */
@@ -240,10 +252,10 @@ class AjaxExampleAdvancedCommands extends FormBase {
  */
 public function ajax_example_advanced_commands_after_callback($form, $form_state) {
   $selector = '#after_div';
-  $command = new ReplaceCommand("#after_status", "Updated after_command_example".date('r')."");
-  $commands[]  = $command->render();
-
-  return ['#type' => 'ajax', '#commands' => $commands];
+  $response = new AjaxResponse();
+  $response->addCommand( new AfterCommand($selector, "New 'after'..."));
+  $response->addCommand( new ReplaceCommand("#after_status", "Updated after_command_example".date('r').""));
+  return $response;
 }
 
 /**
@@ -252,10 +264,9 @@ public function ajax_example_advanced_commands_after_callback($form, $form_state
  * @see ajax_command_alert()
  */
 public function ajax_example_advanced_commands_alert_callback($form, $form_state) {
-  $commands = [];
-  $command = new AlertCommand("Alert requested at " . date('r'));
-  $commands[]  = $command->render();
-  return ['#type' => 'ajax', '#commands' => $commands];
+  $response = new AjaxResponse();
+  $response->addCommand( new AlertCommand("Alert requested at " . date('r')));
+  return $response;
 }
 
 /**
@@ -265,12 +276,10 @@ public function ajax_example_advanced_commands_alert_callback($form, $form_state
  */
 public function ajax_example_advanced_commands_append_callback($form, $form_state) {
   $selector = '#append_div';
-
-  $commands = [];
-  $commands = new AppendCommand($selector, "Stuff...");
-  $commands = new ReplaceCommand("#append_status", "<div id='append_status'>Updated append_command_example " . date('r') . "</div>");
-  $commands[]  = $command->render();
-  return ['#type' => 'ajax', '#commands' => $commands];
+  $response = new AjaxResponse();
+  $response->addCommand( new AppendCommand($selector, "Stuff..."));
+  $response->addCommand( new ReplaceCommand("#append_status", "<div id='append_status'>Updated append_command_example " . date('r') . "</div>"));
+  return $response;
 }
 
 /**
@@ -280,12 +289,11 @@ public function ajax_example_advanced_commands_append_callback($form, $form_stat
  */
 public function ajax_example_advanced_commands_before_callback($form, $form_state) {
   $selector = '#before_div';
+  $response = new AjaxResponse();
+  $response->addCommand( new BeforeCommand($selector, "New 'before'..."));
+  $response->addCommand( new ReplaceCommand("#before_status", "<div id='before_status'>Updated before_command_example " . date('r') . "</div>"));
 
-  $commands = [];
-  $commands = new BeforeCommand($selector, "New 'before'...");
-  $commands = new ReplaceCommand("#before_status", "<div id='before_status'>Updated before_command_example " . date('r') . "</div>");
-  $commands[]  = $command->render();
-  return ['#type' => 'ajax', '#commands' => $commands];
+  return $response;
 }
 
 /**
@@ -296,16 +304,15 @@ public function ajax_example_advanced_commands_before_callback($form, $form_stat
 public function ajax_example_advanced_commands_changed_callback($form, $form_state) {
   $checkbox_value = $form_state->getValue('changed_command_example');
   $checkbox_value_string = $checkbox_value ? "TRUE" : "FALSE";
-  $commands = [];
+  $response = new AjaxResponse();
   if ($checkbox_value) {
-    $commands = new ChangedCommand('#changed_div', '#changed_div_mark_this');
+    $response->addCommand( new ChangedCommand('#changed_div', '#changed_div_mark_this'));
   }
   else {
-    $commands = new ReplaceCommand('#changed_div', "<div id='changed_div'> <div id='changed_div_mark_this'>This div can be marked as changed or not.</div></div>");
+    $response->addCommand(new ReplaceCommand('#changed_div', "<div id='changed_div'> <div id='changed_div_mark_this'>This div can be marked as changed or not.</div></div>"));
   }
-  $commands = new ReplaceCommand("#changed_status", "<div id='changed_status'>Updated changed_command_example to $checkbox_value_string: " . date('r') . "</div>");
-  $commands[]  = $command->render();
-  return ['#type' => 'ajax', '#commands' => $commands];
+  $response->addCommand( new ReplaceCommand("#changed_status", "<div id='changed_status'>Updated changed_command_example to $checkbox_value_string: " . date('r') . "</div>"));
+    return $response;
 }
 
 /**
@@ -316,12 +323,10 @@ public function ajax_example_advanced_commands_changed_callback($form, $form_sta
 public function ajax_example_advanced_commands_css_callback($form, $form_state) {
   $selector = '#css_div';
   $color = $form_state->getValue('css_command_example');
-
-  $commands = [];
-  $commands = new CssCommand($selector, ['background-color' => $color]);
-  $commands = new ReplaceCommand("#css_status", "<div id='css_status'>Updated css_command_example to '{$color}' " . date('r') . "</div>");
-  $commands[]  = $command->render();
-  return ['#type' => 'ajax', '#commands' => $commands];
+  $response = new AjaxResponse();
+  $response->addCommand(new CssCommand($selector, ['background-color' => $color]));
+  $response->addCommand(new ReplaceCommand("#css_status", "<div id='css_status'>Updated css_command_example to '{$color}' " . date('r') . "</div>"));
+  return $response;
 }
 
 /**
@@ -334,12 +339,10 @@ public function ajax_example_advanced_commands_data_callback($form, $form_state)
   $text = $form_state->getValue('data_command_example');
   list($key, $value) = preg_split('/=/', $text);
 
-  $commands = [];
-  $commands = new DataCommand($selector, $key, $value);
-  $commands = new ReplaceCommand("#data_status", "<div id='data_status'>Updated data_command_example with key=$key, value=$value; " . date('r') . "</div>");
-  $commands[]  = $command->render();
-
-  return ['#type' => 'ajax', '#commands' => $commands];
+  $response = new AjaxResponse();
+  $response->addCommand(new DataCommand($selector, $key, $value));
+  $response->addCommand(new ReplaceCommand("#data_status", "<div id='data_status'>Updated data_command_example with key=$key, value=$value; " . date('r') . "</div>"));
+  return $response;
 }
 
 /**
@@ -349,12 +352,10 @@ public function ajax_example_advanced_commands_data_callback($form, $form_state)
  */
 public function ajax_example_advanced_commands_html_callback($form, $form_state) {
   $text = $form_state->getValue('html_command_example');
-
-  $commands = [];
-  $commands = new HtmlCommand('#html_div', $text);
-  $commands = new ReplaceCommand("#html_status", "<div id='html_status'>Updated html_command_example with text=$text;  " . date('r') . "</div>");
-  $commands[]  = $command->render();
-  return ['#type' => 'ajax', '#commands' => $commands];
+  $response = new AjaxResponse();
+  $response->addCommand(new HtmlCommand('#html_div', $text));
+  $response->addCommand(new ReplaceCommand("#html_status", "<div id='html_status'>Updated html_command_example with text=$text;  " . date('r') . "</div>"));
+  return $response;
 }
 
 /**
@@ -363,11 +364,11 @@ public function ajax_example_advanced_commands_html_callback($form, $form_state)
  * @see ajax_command_prepend()
  */
 public function ajax_example_advanced_commands_prepend_callback($form, $form_state) {
-  $commands = [];
-  $commands = new PrependCommand('#prepend_div', "Prepended Stuff...");
-  $commands = new ReplaceCommand("#prepend_status", "<div id='prepend_status'>Updated prepend_command_example " . date('r') . "</div>");
-  $commands[]  = $command->render();
-  return ['#type' => 'ajax', '#commands' => $commands];
+  $response = new AjaxResponse();
+  $response->addCommand(new PrependCommand('#prepend_div', "Prepended Stuff..."));
+  $response->addCommand(new ReplaceCommand("#prepend_status", "<div id='prepend_status'>Updated prepend_command_example " . date('r') . "</div>"));
+
+  return $response;
 }
 
 /**
@@ -376,18 +377,20 @@ public function ajax_example_advanced_commands_prepend_callback($form, $form_sta
  * @see ajax_command_remove()
  */
 public function ajax_example_advanced_commands_remove_callback($form, $form_state) {
-  $commands = [];
+  $response = new AjaxResponse();
   $should_remove = $form_state->getValue('remove_command_example');
   $should_remove_string = $should_remove ? 'TRUE' : 'FALSE';
   if ($should_remove) {
-    $commands = new RemoveCommand('#remove_text');
+    $response->addCommand(new RemoveCommand('#remove_text'));
+
   }
   else {
-    $commands = new HtmlCommand('#remove_div', "<div id='remove_text'>text to be removed</div>");
-  }
-  $commands = new ReplaceCommand("#remove_status", "<div id='remove_status'>Updated remove_command_example (value={$should_remove_string} " . date('r') . "</div>");
-  $commands[]  = $command->render();
-  return ['#type' => 'ajax', '#commands' => $commands];
+    $response->addCommand(new HtmlCommand('#remove_div', "<div id='remove_text'>text to be removed</div>"));
+    }
+  $response->addCommand(new ReplaceCommand("#remove_status", "<div id='remove_status'>Updated remove_command_example (value={$should_remove_string} " . date('r') . "</div>"));
+
+    return $response;
+
 }
 
 /**
@@ -411,11 +414,12 @@ public function ajax_example_advanced_commands_restripe_num_rows($form, $form_st
  * @see ajax_command_restripe()
  */
 public function ajax_example_advanced_commands_restripe_callback($form, $form_state) {
-  $commands = [];
-  $commands = new RestripeCommand('#restripe_table');
-  $commands = new ReplaceCommand("#restripe_status", "<div id='restripe_status'>Restriped table " . date('r') . "</div>");
-  $commands[]  = $command->render();
-  return ['#type' => 'ajax', '#commands' => $commands];
+  $response = new AjaxResponse();
+  $response->addCommand(new RestripeCommand('#restripe_table'));
+  $response->addCommand(new ReplaceCommand("#restripe_status", "<div id='restripe_status'>Restriped table " . date('r') . "</div>"));
+
+  return $response;
+
 }
 
 /**
