@@ -67,7 +67,7 @@ class AjaxExampleProgressBar extends FormBase {
    */
   public function prompt(array $form, FormStateInterface $form_state) {
     $variable_name = 'example_progressbar_' . $form['time'];
-    $commands = [];
+    $response = new AjaxResponse();
     $config = \Drupal::config('ajaxexample.settings');
     $config->set($variable_name, 10)->save();
     sleep(2);
@@ -77,13 +77,8 @@ class AjaxExampleProgressBar extends FormBase {
     sleep(2);
     $config->set($variable_name, 90)->save();
     sleep(2);
-
-    $commands[] = new HtmlCommand('#progress-status', $this->t('Executed.'));
-
-    return [
-      '#type' => 'ajax',
-      '#commands' => $commands,
-    ];
+    $response->addCommand(new HtmlCommand('#progress-status', $this->t('Executed.')));
+    return $response;
   }
 
   /**

@@ -139,3 +139,41 @@ ajax_example.Advanced:
     _title: 'AJAX framework commands'
   requirements:
     _access: 'TRUE'
+
+ajax_example.Ajaxlink:
+  path: 'examples/ajax-example/ajax-link'
+  defaults:
+    _controller: '\Drupal\ajax_example\Controller\AjaxExampleController::ajaxExampleRenderLink'
+    _title: 'Ajax Link (Renderable Array)'
+  requirements:
+    _access: 'TRUE'
+
+ajax_example.Ajaxlinkrender:
+  path: 'examples/ajax-example/ajax-link-renderable'
+  defaults:
+    _controller: '\Drupal\ajax_example\Controller\AjaxExampleController::ajaxExampleRenderLinkRa'
+    _title: 'Ajax Link (Renderable Array)'
+  requirements:
+    _access: 'TRUE'
+
+ajax_example.Ajaxlinkcall:
+  path: 'ajax_link_callback'
+  defaults:
+    _controller: '\Drupal\ajax_example\Controller\AjaxExampleController::ajaxlinkresponse'
+  requirements:
+    _permission: 'access content'
+
+ajax_example.AutocompleteSimplest:
+  path: 'examples/ajax_example/simple_autocomplete'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleAutocomplete'
+    _title: 'Autocomplete (simple)'
+  requirements:
+    _permission: 'access content, access user profiles'
+
+ajax_example.AutocompleteSimplestcallback:
+  path: 'examples/ajax_example/simple_user_autocomplete_callback'
+  defaults:
+    _controller: '\Drupal\ajax_example\Controller\AjaxExampleController::ajax_example_simple_user_autocomplete_callback'
+  requirements:
+    _permission: 'access user profiles, access content'
