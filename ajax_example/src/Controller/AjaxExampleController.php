@@ -161,7 +161,7 @@ URL whether JS was enabled or not, letting it do different things based on that.
   public function ajax_example_simple_user_autocomplete_callback($string = "") {
 
   $matches = array();
-  $string = "root";
+
   if ($string) {
     $db = \Drupal::database();
     $result = $db->select('users')
@@ -175,6 +175,57 @@ URL whether JS was enabled or not, letting it do different things based on that.
       // dropdown.
       $matches[] = array('value' => $user->name, 'label' => $user->uid);
       $matches[$user->name] = SafeMarkup::check_plain($user->name) . " (uid=$user->uid)";
+    }
+  }
+
+  return new JsonResponse($matches);
+}
+/**
+ * Autocomplete callback for nodes by title.
+ *
+ * Searches for a node by title, but then identifies it by nid, so the actual
+ * returned value can be used later by the form.
+ *
+ * The returned $matches array has
+ * - key: The title, with the identifying nid in brackets, like "Some node
+ *   title [3325]"
+ * - value: the title which will is displayed in the autocomplete pulldown.
+ *
+ * Note that we must use a key style that can be parsed successfully and
+ * unambiguously. For example, if we might have node titles that could have
+ * [3325] in them, then we'd have to use a more restrictive token.
+ *
+ * @param string $string
+ *   The string that will be searched.
+ */
+public function ajax_example_unique_node_autocomplete_callback($string = "") {
+  $matches = array();
+  if ($string) {
+    $db = Database::getConnection();
+    $result = $db->select('node')
+      ->fields('node', array('nid', 'title'))
+      ->condition('title', $db->escapeLike($string) . '%', 'LIKE')
+      ->range(0, 10)
+      ->execute();
+    foreach ($result as $node) {
+      $matches[$node->title . " [$node->nid]"] = SafeMarkup::check_plain($node->title);
+    }
+  }
+
+  return new JsonResponse($matches);
+}
+public function ajax_example_node_by_author_node_autocomplete_callback($author_uid, $string = "") {
+  $matches = array();
+  if ($author_uid > 0 && trim($string)) {
+    $db = Database::getConnection();
+    $result = $db->select('node')
+      ->fields('node', array('nid', 'title'))
+      ->condition('uid', $author_uid)
+      ->condition('title', $db->escapeLike($string) . '%', 'LIKE')
+      ->range(0, 10)
+      ->execute();
+    foreach ($result as $node) {
+      $matches[$node->title . " [$node->nid]"] = SafeMarkup::check_plain($node->title);
     }
   }
 

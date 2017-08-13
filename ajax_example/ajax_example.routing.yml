@@ -177,3 +177,18 @@ ajax_example.AutocompleteSimplestcallback:
     _controller: '\Drupal\ajax_example\Controller\AjaxExampleController::ajax_example_simple_user_autocomplete_callback'
   requirements:
     _permission: 'access user profiles, access content'
+
+ajax_example.Autocompletenode:
+  path: 'examples/ajax_example/node_autocomplete'
+  defaults:
+    _form: '\Drupal\ajax_example\Form\AjaxExampleUniquecomplete'
+    _title: 'Autocomplete (node with nid)'
+  requirements:
+    _permission: 'access content'
+
+ajax_example.Autocompletenodecallback:
+  path: 'examples/ajax_example/unique_node_autocomplete_callback'
+  defaults:
+    _controller: '\Drupal\ajax_example\Controller\AjaxExampleController::ajax_example_unique_node_autocomplete_callback'
+  requirements:
+    _permission: 'access content'
