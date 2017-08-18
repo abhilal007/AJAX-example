@@ -9,7 +9,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Database\Connection;
 use Drupal\Component\Utility\SafeMarkup;
 
 
@@ -18,12 +18,17 @@ use Drupal\Component\Utility\SafeMarkup;
  */
 class AjaxExampleController extends ControllerBase {
   use DescriptionTemplateTrait;
+  protected $connection;
 
   /**
    * {@inheritdoc}
    */
   protected function getModuleName() {
     return 'ajax_example';
+  }
+
+   public function __construct(Connection $connection) {
+    $this->connection = $connection;
   }
 
   /**
@@ -163,10 +168,10 @@ URL whether JS was enabled or not, letting it do different things based on that.
   $matches = array();
 
   if ($string) {
-    $db = \Drupal::database();
-    $result = $db->select('users')
+
+    $result = $this->connection->select('users')
       ->fields('users', array('name', 'uid'))
-      ->condition('name', $db->like($string) . '%', 'LIKE')
+      ->condition('name', $this->connection->like($string) . '%', 'LIKE')
       ->range(0, 10)
       ->execute();
     foreach ($result as $user) {
@@ -201,10 +206,10 @@ URL whether JS was enabled or not, letting it do different things based on that.
 public function ajax_example_unique_node_autocomplete_callback($string = "") {
   $matches = array();
   if ($string) {
-    $db = Database::getConnection();
-    $result = $db->select('node')
+
+    $result = $this->connection->select('node')
       ->fields('node', array('nid', 'title'))
-      ->condition('title', $db->escapeLike($string) . '%', 'LIKE')
+      ->condition('title', $this->connection->escapeLike($string) . '%', 'LIKE')
       ->range(0, 10)
       ->execute();
     foreach ($result as $node) {

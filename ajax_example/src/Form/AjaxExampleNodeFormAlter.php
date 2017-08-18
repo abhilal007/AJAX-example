@@ -5,7 +5,7 @@ namespace Drupal\ajax_example\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Database\Connection;
 use Drupal\node\Entity\Node;
 
 /**
@@ -13,6 +13,13 @@ use Drupal\node\Entity\Node;
  */
 class AjaxExampleNodeFormAlter extends FormBase {
 
+  protected $connection;
+  /**
+   *
+   */
+  public function __construct(Connection $connection) {
+    $this->connection = $connection;
+  }
   /**
    * {@inheritdoc}
    */
@@ -84,7 +91,7 @@ class AjaxExampleNodeFormAlter extends FormBase {
  * @see ajax_example_form_node_form_alter()
  */
 public function ajax_example_node_load($nodes, $types) {
-  $result = db_query('SELECT * FROM {ajax_example_node_form_alter} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)))->fetchAllAssoc('nid');
+  $result = $this->connection->query('SELECT * FROM {ajax_example_node_form_alter} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)))->fetchAllAssoc('nid');
 
   foreach ($nodes as &$node) {
     $node->ajax_example['example_1']
@@ -103,7 +110,7 @@ public function ajax_example_node_load($nodes, $types) {
  */
 public function ajax_example_node_insert($node) {
   if (isset($node->ajax_example)) {
-    db_insert('ajax_example_node_form_alter')
+    $this->connection->insert('ajax_example_node_form_alter')
       ->fields(array(
         'nid' => $node->nid,
         'example_1' => $node->ajax_example['example_1'],
@@ -118,8 +125,8 @@ public function ajax_example_node_insert($node) {
  * @see ajax_example_form_node_form_alter()
  */
 public function ajax_example_node_update($node) {
-  if (db_select('ajax_example_node_form_alter', 'a')->fields('a')->condition('nid', $node->nid, '=')->execute()->fetchAssoc()) {
-    db_update('ajax_example_node_form_alter')
+  if ($this->connection->select('ajax_example_node_form_alter', 'a')->fields('a')->condition('nid', $node->nid, '=')->execute()->fetchAssoc()) {
+     $this->connection->update('ajax_example_node_form_alter')
       ->fields(array(
         'example_1' => $node->ajax_example['example_1'],
         'example_2' => $node->ajax_example['example_2'],
@@ -138,7 +145,7 @@ public function ajax_example_node_update($node) {
  * @see ajax_example_form_node_form_alter()
  */
 public function ajax_example_node_delete($node) {
-  db_delete('ajax_example_node_form_alter')
+   $this->connection->delete('ajax_example_node_form_alter')
     ->condition('nid', $node->nid)
     ->execute();
 }
