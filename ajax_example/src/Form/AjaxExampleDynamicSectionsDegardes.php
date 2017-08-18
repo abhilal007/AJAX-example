@@ -8,7 +8,17 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
+ * Dynamically-enabled form with graceful no-JS degradation.
  *
+ * Example of a form with portions dynamically enabled or disabled, but
+ * with graceful degradation in the case of no javascript.
+ *
+ * The idea here is that certain parts of the form don't need to be displayed
+ * unless a given option is selected, but then they should be displayed and
+ * configured.
+ *
+ * The third $no_js_use argument is strictly for demonstrating operation
+ * without javascript, without making the user/developer turn off javascript.
  */
 class AjaxExampleDynamicSectionsDegardes extends FormBase {
 
@@ -20,7 +30,7 @@ class AjaxExampleDynamicSectionsDegardes extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
+   *
    */
   public function buildForm(array $form, FormStateInterface $form_state, $no_js_use = FALSE) {
     $url = Url::fromUri('internal:/examples/ajax-example/dynamic-sections-no_js');
@@ -29,7 +39,9 @@ class AjaxExampleDynamicSectionsDegardes extends FormBase {
     // Prepare link for multiple arguments.
     $urltwo = Url::fromUri('internal:/examples/ajax-example/dynamic-sections');
     $linktwo = Link::fromTextAndUrl($this->t('examples/ajax-example/dynamic-sections'), $urltwo)->toString();
-
+    // Attach the CSS and JS we need to show this with and without javascript.
+    // Without javascript we need an extra "Choose" button, and this is
+    // hidden when we have javascript enabled.
     $form['#attached']['library'][] = 'ajax_example/ajax_eample.dropdown';
 
     $form['description'] = [
@@ -99,11 +111,11 @@ class AjaxExampleDynamicSectionsDegardes extends FormBase {
             '#type' => 'radios',
             '#title' => t('Who was the first president of the United States'),
             '#options' => [
-            'George Bush' => 'George Bush',
-            'Adam McGuire' => 'Adam McGuire',
-            'Abraham Lincoln' =>'Abraham Lincoln',
-            'George Washington' =>'George Washington',
-          ],
+              'George Bush' => 'George Bush',
+              'Adam McGuire' => 'Adam McGuire',
+              'Abraham Lincoln' => 'Abraham Lincoln',
+              'George Washington' => 'George Washington',
+            ],
 
           ];
           break;
@@ -113,8 +125,8 @@ class AjaxExampleDynamicSectionsDegardes extends FormBase {
             '#type' => 'radios',
             '#title' => $this->t('Was George Washington the first president of the United States?'),
             '#options' => [
-            'George Washington' => 'True',
-            0 => 'False',
+              'George Washington' => 'True',
+              0 => 'False',
             ],
             '#description' => $this->t('Click "True" if you think George Washington was the first president of the United States.'),
           ];
@@ -138,41 +150,39 @@ class AjaxExampleDynamicSectionsDegardes extends FormBase {
   }
 
   /**
-   * Submit function for ajax_example_dynamic_sections().
+   * Final submit handler.
+   *
+   * Reports what values were finally set.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // This is only executed when a button is pressed, not when the AJAXified
+    // This is only executed when a button is pressed, not when the AJAXfield
     // select is changed.
     // Now handle the case of the next, previous, and submit buttons.
     // Only submit will result in actual submission, all others rebuild.
-    if($form_state->getValue('question_type_submit') == 'Choose'){
-          //print_r("Why is this");
-          $form_state->setValue('question_type_select', $form_state->getUserInput()['question_type_select']);
-          $form_state->setRebuild();
-}
+    if ($form_state->getValue('question_type_submit') == 'Choose') {
+      $form_state->setValue('question_type_select', $form_state->getUserInput()['question_type_select']);
+      $form_state->setRebuild();
+    }
 
-    if($form_state->getValue('submit') == 'Submit your answer'){
-        $form_state->setRebuild(FALSE);
-
-        $answer = $form_state->getValue('question');
-        print_r($answers);
-        // Special handling for the checkbox.
-        if ($answer == 1 && $form['questions_fieldset']['question']['#type'] == 'checkbox') {
-          $answer = $form['questions_fieldset']['question']['#title'];
-        }
-        if ($answer == $this->t('George Washington')) {
-          drupal_set_message($this->t('You got the right answer: @answer', ['@answer' => $answer]));
-        }
-        else {
-          drupal_set_message($this->t('Sorry, your answer (@answer) is wrong', ['@answer' => $answer]));
-        }
-        return;
-
+    if ($form_state->getValue('submit') == 'Submit your answer') {
+      $form_state->setRebuild(FALSE);
+      $answer = $form_state->getValue('question');
+      print_r($answers);
+      // Special handling for the checkbox.
+      if ($answer == 1 && $form['questions_fieldset']['question']['#type'] == 'checkbox') {
+        $answer = $form['questions_fieldset']['question']['#title'];
       }
-
+      if ($answer == $this->t('George Washington')) {
+        drupal_set_message($this->t('You got the right answer: @answer', ['@answer' => $answer]));
+      }
+      else {
+        drupal_set_message($this->t('Sorry, your answer (@answer) is wrong', ['@answer' => $answer]));
+      }
+      return;
+    }
+    // Sets the form to be rebuilt after processing.
     $form_state->setRebuild();
   }
-
 
   /**
    * Callback for the select element.

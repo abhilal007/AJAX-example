@@ -9,7 +9,11 @@ use Drupal\Core\Database\Query\Condition;
 use Drupal\node\Entity\Node;
 
 /**
+ *An autocomplete form to look up nodes by title.
  *
+ * An autocomplete form which looks up nodes by title in the node table,
+ * but must keep track of the nid, because titles are certainly not guaranteed
+ * to be unique.
  */
 class AjaxExampleUniquecomplete extends FormBase {
 
@@ -48,7 +52,7 @@ class AjaxExampleUniquecomplete extends FormBase {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $title = $form_state->getValue('node');
@@ -94,7 +98,7 @@ class AjaxExampleUniquecomplete extends FormBase {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $node = Node::load($form_state->getValue(['values', 'node']));

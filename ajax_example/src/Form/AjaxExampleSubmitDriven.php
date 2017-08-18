@@ -6,7 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- *
+ * Submit a form without a page reload.
  */
 class AjaxExampleSubmitDriven extends FormBase {
 

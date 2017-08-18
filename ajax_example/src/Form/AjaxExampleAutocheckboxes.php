@@ -6,7 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- *
+ * Generate a changing number of checkboxes.
  */
 class AjaxExampleAutocheckboxes extends FormBase {
 
@@ -76,8 +76,17 @@ class AjaxExampleAutocheckboxes extends FormBase {
   }
 
   /**
-   * Handles switching the available regions based on the selected theme.
-   */
+ * Callback for autocheckboxes.
+ *
+ * Callback element needs only select the portion of the form to be updated.
+ * Since #ajax['callback'] return can be HTML or a renderable array (or an
+ * array of commands), we can just return a piece of the form.
+ * See @link examples/ajax-example/advanced-commands for more details
+ * on AJAX framework commands.
+ *
+ * @return array
+ *   Renderable array (the checkboxes fieldset)
+ */
   public function prompt($form, FormStateInterface $form_state) {
     return $form['checkboxes_fieldset'];
   }

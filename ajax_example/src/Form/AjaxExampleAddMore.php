@@ -20,7 +20,8 @@ class AjaxExampleAddMore extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * This example shows a button to "add more" - add another textfield, and
+   * the corresponding "remove" button.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $no_js_use = FALSE) {
     $url = Url::fromUri('internal:/examples/ajax-example/add-more-nojs/');
@@ -30,7 +31,7 @@ class AjaxExampleAddMore extends FormBase {
     $urltwo = Url::fromUri('internal:/examples/ajax_example/add-more');
     $linktwo = Link::fromTextAndUrl($this->t('AJAX version'), $urltwo)->toString();
     $form['description'] = [
-      '#markup' =>t('This example shows an add-more and a remove-last button. The @link does it without page reloads; the @link2 is the same code but simulates a non-javascript environment, showing it with page reloads.',
+      '#markup' => t('This example shows an add-more and a remove-last button. The @link does it without page reloads; the @link2 is the same code but simulates a non-javascript environment, showing it with page reloads.',
       ['@link' => $linktwo, '@link2' => $link]),
 
     ];
@@ -62,8 +63,6 @@ class AjaxExampleAddMore extends FormBase {
       '#type' => 'submit',
       '#value' => t('Add one more'),
       '#submit' => ['::ajax_example_add_more_add_one'],
-    // See the examples in ajax_example.module for more details on the
-    // properties of #ajax.
       '#ajax' => [
         'callback' => '::prompt',
         'wrapper' => 'names-fieldset-wrapper',
@@ -147,9 +146,8 @@ class AjaxExampleAddMore extends FormBase {
       '@names' => implode(', ', $form_state->getValue(['names_fieldset', 'name'])),
     ]
       );
+    // Sets a message to display to the user.
     drupal_set_message($output);
   }
-
-
 
 }

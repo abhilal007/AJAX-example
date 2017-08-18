@@ -6,7 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- *
+ * A simple autocomplete form which just looks up usernames in the user table.
  */
 class AjaxExampleAutocomplete extends FormBase {
 
@@ -36,7 +36,7 @@ class AjaxExampleAutocomplete extends FormBase {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }

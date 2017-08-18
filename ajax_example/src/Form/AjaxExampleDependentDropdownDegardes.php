@@ -6,7 +6,24 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
+ *Dropdown form based on previous choices.
  *
+ * A form with a dropdown whose options are dependent on a choice made in a
+ * previous dropdown.
+ *
+ * On changing the first dropdown, the options in the second
+ * are updated. Gracefully degrades if no javascript.
+ *
+ * A bit of CSS and javascript is required. The CSS hides the "add more" button
+ * if javascript is not enabled. The Javascript snippet is really only used
+ * to enable us to present the form in degraded mode without forcing the user
+ * to turn off Javascript.  Both of these are loaded by using the
+ * #attached FAPI property, so it is a good example of how to use that.
+ *
+ * The extra argument $no_js_use is here only to allow presentation of this
+ * form as if Javascript were not enabled. ajax_example_menu() provides two
+ * ways to call this form, one normal ($no_js_use = FALSE) and one simulating
+ * Javascript disabled ($no_js_use = TRUE).
  */
 class AjaxExampleDependentDropdownDegardes extends FormBase {
 
@@ -120,38 +137,15 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
     // case t('OK'):
     // Submit: We're done.
     $trigger = $form_state->getTriggeringElement()['#value'];
-    switch($trigger){
-    case 'Choose':
-      $form_state->setRebuild();
-      break;
-    case 'OK':
-      drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
-      break;
+    switch ($trigger) {
+      case 'Choose':
+        $form_state->setRebuild();
+        break;
 
-
-      }
-
-
-
-
-    /*if ($form_state->getValue('continue_to_second') == 'Choose') {
-      // print_r("Why is this");.
-      $form_state->setRebuild();
-      if ($form_state->getValue('dropdown_second') == '') {
-        return;
-      }
-
+      case 'OK':
+        drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
+        break;
     }
-
-    if ($form_state->getValue('submit') == 'OK') {
-      drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
-      return;
-    }*/
-    // default:
-    // drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
-    // return;
-    // 'Choose' or anything else will cause rebuild of the form and present
-    // it again.
     $form_state->setRebuild();
   }
 

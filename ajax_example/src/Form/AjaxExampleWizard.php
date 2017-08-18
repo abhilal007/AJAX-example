@@ -2,13 +2,11 @@
 
 namespace Drupal\ajax_example\Form;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\HtmlCommand;
 
 /**
@@ -36,8 +34,8 @@ class AjaxExampleWizard extends FormBase {
     $linktwo = Link::fromTextAndUrl($this->t('examples/ajax-example/wizard'), $urltwo)
       ->toString();
 
-//    $form['#prefix'] = '<div id="wizard-form-wrapper">';
-//    $form['#suffix'] = '</div>';
+    // $form['#prefix'] = '<div id="wizard-form-wrapper">';
+    //    $form['#suffix'] = '</div>';
     // We want to deal with hierarchical form values.
     $form['#tree'] = TRUE;
     $form['description'] = [
@@ -77,7 +75,6 @@ class AjaxExampleWizard extends FormBase {
         ],
       ];
     }
-
 
     // This simply allows us to demonstrate no-javascript use without
     // actually turning off javascript in the browser. Removing the #ajax

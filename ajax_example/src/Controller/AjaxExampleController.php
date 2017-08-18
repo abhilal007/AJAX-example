@@ -12,9 +12,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 use Drupal\Component\Utility\SafeMarkup;
 
-
 /**
- * Controller routines for block example routes.
+ * Controller routines for AJAX example routes.
  */
 class AjaxExampleController extends ControllerBase {
   use DescriptionTemplateTrait;
@@ -27,7 +26,10 @@ class AjaxExampleController extends ControllerBase {
     return 'ajax_example';
   }
 
-   public function __construct(Connection $connection) {
+  /**
+   *
+   */
+  public function __construct(Connection $connection) {
     $this->connection = $connection;
   }
 
@@ -86,7 +88,8 @@ class AjaxExampleController extends ControllerBase {
   public function ajaxExampleRenderLinkRa() {
 
     $build['my_div'] = [
-      '#markup' => $this->t('The link below has been rendered as an element with the #ajax property, so if
+      '#markup' => $this->t('
+The link below has been rendered as an element with the #ajax property, so if
 javascript is enabled, ajax.js will try to submit it via an AJAX call instead
 of a normal page load. The URL also contains the "/nojs/" magic string, which
 is stripped if javascript is enabled, allowing the server code to tell by the
@@ -163,78 +166,105 @@ URL whether JS was enabled or not, letting it do different things based on that.
     }
   }
 
+  /**
+   * This is just a copy of user_autocomplete().
+   *
+   * It works simply by searching usernames (and of course in Drupal usernames
+   * are unique, so can be used for identifying a record.)
+   *
+   * The returned $matches array has
+   * * key: string which will be displayed once the autocomplete is selected
+   * * value: the value which will is displayed in the autocomplete pulldown.
+   *
+   * In the simplest cases (see user_autocomplete()) these are the same, and
+   * nothing needs to be done. However, more more complicated autocompletes
+   * require more work. Here we demonstrate the difference by displaying the UID
+   * along with the username in the dropdown.
+   *
+   * In the end, though, we'll be doing something with the value that ends up in
+   * the textfield, so it needs to uniquely identify the record we want to access.
+   * This is demonstrated in ajax_example_unique_autocomplete().
+   *
+   * @param string $string
+   *   The string that will be searched.
+   */
   public function ajax_example_simple_user_autocomplete_callback($string = "") {
 
-  $matches = array();
+    $matches = [];
 
-  if ($string) {
+    if ($string) {
 
-    $result = $this->connection->select('users')
-      ->fields('users', array('name', 'uid'))
-      ->condition('name', $this->connection->like($string) . '%', 'LIKE')
-      ->range(0, 10)
-      ->execute();
-    foreach ($result as $user) {
-      // In the simplest case (see user_autocomplete), the key and the value are
-      // the same. Here we'll display the uid along with the username in the
-      // dropdown.
-      $matches[] = array('value' => $user->name, 'label' => $user->uid);
-      $matches[$user->name] = SafeMarkup::check_plain($user->name) . " (uid=$user->uid)";
+      $result = $this->connection->select('users')
+        ->fields('users', ['name', 'uid'])
+        ->condition('name', $this->connection->like($string) . '%', 'LIKE')
+        ->range(0, 10)
+        ->execute();
+      foreach ($result as $user) {
+        // In the simplest case (see user_autocomplete), the key and the value are
+        // the same. Here we'll display the uid along with the username in the
+        // dropdown.
+        $matches[] = ['value' => $user->name, 'label' => $user->uid];
+        $matches[$user->name] = SafeMarkup::check_plain($user->name) . " (uid=$user->uid)";
+      }
     }
+
+    return new JsonResponse($matches);
   }
 
-  return new JsonResponse($matches);
-}
-/**
- * Autocomplete callback for nodes by title.
- *
- * Searches for a node by title, but then identifies it by nid, so the actual
- * returned value can be used later by the form.
- *
- * The returned $matches array has
- * - key: The title, with the identifying nid in brackets, like "Some node
- *   title [3325]"
- * - value: the title which will is displayed in the autocomplete pulldown.
- *
- * Note that we must use a key style that can be parsed successfully and
- * unambiguously. For example, if we might have node titles that could have
- * [3325] in them, then we'd have to use a more restrictive token.
- *
- * @param string $string
- *   The string that will be searched.
- */
-public function ajax_example_unique_node_autocomplete_callback($string = "") {
-  $matches = array();
-  if ($string) {
+  /**
+   * Autocomplete callback for nodes by title.
+   *
+   * Searches for a node by title, but then identifies it by nid, so the actual
+   * returned value can be used later by the form.
+   *
+   * The returned $matches array has
+   * - key: The title, with the identifying nid in brackets, like "Some node
+   *   title [3325]"
+   * - value: the title which will is displayed in the autocomplete pulldown.
+   *
+   * Note that we must use a key style that can be parsed successfully and
+   * unambiguously. For example, if we might have node titles that could have
+   * [3325] in them, then we'd have to use a more restrictive token.
+   *
+   * @param string $string
+   *   The string that will be searched.
+   */
+  public function ajax_example_unique_node_autocomplete_callback($string = "") {
+    $matches = [];
+    if ($string) {
 
-    $result = $this->connection->select('node')
-      ->fields('node', array('nid', 'title'))
-      ->condition('title', $this->connection->escapeLike($string) . '%', 'LIKE')
-      ->range(0, 10)
-      ->execute();
-    foreach ($result as $node) {
-      $matches[$node->title . " [$node->nid]"] = SafeMarkup::check_plain($node->title);
+      $result = $this->connection->select('node')
+        ->fields('node', ['nid', 'title'])
+        ->condition('title', $this->connection->escapeLike($string) . '%', 'LIKE')
+        ->range(0, 10)
+        ->execute();
+      foreach ($result as $node) {
+        $matches[$node->title . " [$node->nid]"] = SafeMarkup::check_plain($node->title);
+      }
     }
+
+    return new JsonResponse($matches);
   }
 
-  return new JsonResponse($matches);
-}
-public function ajax_example_node_by_author_node_autocomplete_callback($author_uid, $string = "") {
-  $matches = array();
-  if ($author_uid > 0 && trim($string)) {
-    $db = Database::getConnection();
-    $result = $db->select('node')
-      ->fields('node', array('nid', 'title'))
-      ->condition('uid', $author_uid)
-      ->condition('title', $db->escapeLike($string) . '%', 'LIKE')
-      ->range(0, 10)
-      ->execute();
-    foreach ($result as $node) {
-      $matches[$node->title . " [$node->nid]"] = SafeMarkup::check_plain($node->title);
+  /**
+   *
+   */
+  public function ajax_example_node_by_author_node_autocomplete_callback($author_uid, $string = "") {
+    $matches = [];
+    if ($author_uid > 0 && trim($string)) {
+      $db = Database::getConnection();
+      $result = $db->select('node')
+        ->fields('node', ['nid', 'title'])
+        ->condition('uid', $author_uid)
+        ->condition('title', $db->escapeLike($string) . '%', 'LIKE')
+        ->range(0, 10)
+        ->execute();
+      foreach ($result as $node) {
+        $matches[$node->title . " [$node->nid]"] = SafeMarkup::check_plain($node->title);
+      }
     }
-  }
 
-  return new JsonResponse($matches);
-}
+    return new JsonResponse($matches);
+  }
 
 }

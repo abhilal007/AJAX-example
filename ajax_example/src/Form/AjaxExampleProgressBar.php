@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- *
+ *Progress bar example.
  */
 class AjaxExampleProgressBar extends FormBase {
 
@@ -20,7 +20,7 @@ class AjaxExampleProgressBar extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Build a landing-page form for the progress bar example.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['time'] = \Drupal::time()->getRequestTime();

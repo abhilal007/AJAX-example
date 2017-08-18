@@ -6,7 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- *
+ * Show/hide textfields based on AJAX-enabled checkbox clicks.
  */
 class AjaxExampleAutotextfields extends FormBase {
 
@@ -78,8 +78,12 @@ class AjaxExampleAutotextfields extends FormBase {
   }
 
   /**
-   * Handles switching the available regions based on the selected theme.
-   */
+ * Callback for autotextfields.
+ *
+ * Selects the piece of the form we want to use as replacement text and returns
+ * it as a form (renderable array).
+ *
+ */
   public function prompt($form, FormStateInterface $form_state) {
     return $form['textfields'];
   }
