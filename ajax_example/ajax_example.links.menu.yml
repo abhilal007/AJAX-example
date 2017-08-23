@@ -1,63 +1,73 @@
 ajax_example.description:
   title: 'AJAX Example'
   route_name: 'ajax_example.description'
-  parent: ''
-
+   weight: 10
 ajax_example.simplest:
   title: 'Simplest AJAX Example'
   route_name: 'ajax_example.simplest'
-  parent: ''
+  parent: ajax_example.description
 
 ajax_example.autocheckboxes:
   title: 'Generate checkboxes'
   route_name: 'ajax_example.autocheckboxes'
+  parent: ajax_example.description
 
 ajax_example.autotextfeilds:
   title: 'Generate textfields'
   route_name: 'ajax_example.autotextfields'
+  parent: ajax_example.description
 
 ajax_example.submit-driven:
   title: 'Submit-driven AJAX'
   route_name: 'ajax_example.submit-driven-ajax'
+  parent: ajax_example.description
 
 ajax_example.dependent-dropdown:
   title: 'Dependent dropdown'
   route_name: 'ajax_example.dependent_dropdown'
+  parent: ajax_example.description
 
 ajax_example.dependent-dropdown-degardes:
   title: 'Dependent dropdown degardes'
   route_name: 'ajax_example.dependent_dropdown_degardes'
+  parent: ajax_example.description
 
 ajax_example.dependent-dropdown-degardes-nojava:
   title: 'Dependent dropdown degardes w/JS turned off '
   route_name: 'ajax_example.dependent_dropdown_degardes_nojava'
+  parent: ajax_example.description
 
 ajax_example.dynamic-dropdown:
   title: 'Dynamic Sections (with graceful degradation)'
   route_name: 'ajax_example.dynamic_sections'
+  parent: ajax_example.description
 
 ajax_example.dynamic-dropdown-degardes-nojava-example:
   title: 'Dynamic Sections (with graceful degradation) w/js turned off'
   route_name: 'ajax_example.dynamic_sections_nojava'
+  parent: ajax_example.description
 
 ajax_example.wizard-example:
-  title: 'Ajax Wizard Example'
+  title: 'AJAX Wizard Example'
   route_name: 'ajax_example.Wizard'
+  parent: ajax_example.description
 
 ajax_example.wizard-examplenojs:
-  title: 'Ajax Wizard Example w/JS turned off'
+  title: 'AJAX Wizard Example w/JS turned off'
   route_name: 'ajax_example.Wizardnojs'
+  parent: ajax_example.description
 
 ajax_example.addmorenojs:
   title: 'Add more button (with graceful degradation) w/JS turned off'
   route_name: 'ajax_example.Addmorenojs'
+  parent: ajax_example.description
 
 ajax_example.addmore:
-  title: 'Ajax Add more button'
+  title: 'AJAX Add more button'
   route_name: 'ajax_example.Addmore'
+  parent: ajax_example.description
 
 ajax_example.Advanced:
   title: 'AJAX framework commands'
   route_name: 'ajax_example.Advanced'
-
-
+  parent: ajax_example.description

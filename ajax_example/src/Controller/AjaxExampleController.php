@@ -29,9 +29,13 @@ class AjaxExampleController extends ControllerBase {
   /**
    *
    */
-  public function __construct(Connection $connection) {
-    $this->connection = $connection;
+
+  public function basicInstructions() {
+    return [
+      $this->description(),
+    ];
   }
+
 
   /**
    * Get the progress bar execution status, as JSON.
@@ -146,7 +150,6 @@ URL whether JS was enabled or not, letting it do different things based on that.
    *   If $type == 'ajax', returns an array of AJAX Commands.
    *   Otherwise, just returns the content, which will end up being a page.
    *
-   * @ingroup ajax_example
    */
   public function ajaxlinkresponse($type = 'ajax') {
     if ($type == 'ajax') {
@@ -166,9 +169,7 @@ URL whether JS was enabled or not, letting it do different things based on that.
     }
   }
 
-  /**
-   * This is just a copy of user_autocomplete().
-   *
+/**
    * It works simply by searching usernames (and of course in Drupal usernames
    * are unique, so can be used for identifying a record.)
    *
@@ -176,10 +177,10 @@ URL whether JS was enabled or not, letting it do different things based on that.
    * * key: string which will be displayed once the autocomplete is selected
    * * value: the value which will is displayed in the autocomplete pulldown.
    *
-   * In the simplest cases (see user_autocomplete()) these are the same, and
-   * nothing needs to be done. However, more more complicated autocompletes
-   * require more work. Here we demonstrate the difference by displaying the UID
-   * along with the username in the dropdown.
+   * In the simplest cases (see drupal/ajax_example/form/AjaxExampleAutocomplete.php)
+   * these are the same, andnothing needs to be done. However, more complicated
+   * autocompletes require more work. Here we demonstrate the difference by
+   * displaying the UID along with the username in the dropdown.
    *
    * In the end, though, we'll be doing something with the value that ends up in
    * the textfield, so it needs to uniquely identify the record we want to access.
@@ -188,8 +189,8 @@ URL whether JS was enabled or not, letting it do different things based on that.
    * @param string $string
    *   The string that will be searched.
    */
-  public function ajax_example_simple_user_autocomplete_callback($string = "") {
-
+  public function ajax_example_simple_user_autocomplete_callback(Connection $connection, $string = "") {
+    $this->connection = Connection::$connection;
     $matches = [];
 
     if ($string) {
@@ -230,6 +231,7 @@ URL whether JS was enabled or not, letting it do different things based on that.
    *   The string that will be searched.
    */
   public function ajax_example_unique_node_autocomplete_callback($string = "") {
+    $this->connection = Connection::$connection;
     $matches = [];
     if ($string) {
 
@@ -250,6 +252,7 @@ URL whether JS was enabled or not, letting it do different things based on that.
    *
    */
   public function ajax_example_node_by_author_node_autocomplete_callback($author_uid, $string = "") {
+    $this->connection = Connection::$connection;
     $matches = [];
     if ($author_uid > 0 && trim($string)) {
       $db = Database::getConnection();
