@@ -31,7 +31,7 @@ class AjaxExampleTest extends WebTestBase {
    */
   public function testAjaxExamplePage() {
     $this->drupalGet('examples/ajax-example');
-    $this->assertText(t('AJAX Example'), '"AJAX Example" found.');
+    $this->assertText($this->t('AJAX Example'), '"AJAX Example" found.');
   }
 
 }
