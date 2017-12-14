@@ -45,7 +45,7 @@ class AjaxExampleAutotextfields extends FormBase {
       '#prefix' => '<div id="textfields">',
       '#suffix' => '</div>',
       '#type' => 'fieldset',
-      '#description' => t('This is where we put automatically generated textfields'),
+      '#description' => $this->t('This is where we put automatically generated textfields'),
     ];
 
     // Since checkboxes return TRUE or FALSE, we have to check that
