@@ -49,7 +49,7 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
     // Attach the CSS and JS we need to show this with and without javascript.
     // Without javascript we need an extra "Choose" button, and this is
     // hidden when we have javascript enabled.
-    $form['#attached']['library'][] = 'ajax_example/ajax_eample.dropdown';
+    $form['#attached']['library'][] = 'ajax_example/ajax_example.dropdown';
 
     $form['dropdown_first_fieldset'] = [
       '#type' => 'details',
