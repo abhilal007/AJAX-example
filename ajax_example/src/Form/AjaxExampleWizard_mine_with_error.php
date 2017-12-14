@@ -35,7 +35,7 @@ class AjaxExampleWizard extends FormBase {
     // We want to deal with hierarchical form values.
     $form['#tree'] = TRUE;
     $form['description'] = [
-      '#markup' =>t('This example is a step-by-step wizard. The @link does it without page reloads; the @link1 is the same code but simulates a non-javascript environment, showing it with page reloads.', ['@link' => $linktwo, '@link1' => $link]),
+      '#markup' =>$this->t('This example is a step-by-step wizard. The @link does it without page reloads; the @link1 is the same code but simulates a non-javascript environment, showing it with page reloads.', ['@link' => $linktwo, '@link1' => $link]),
     ];
 
     // $form_state['storage'] has no specific drupal meaning, but it is
@@ -54,11 +54,11 @@ class AjaxExampleWizard extends FormBase {
       case 1:
         $form['step1'] = [
           '#type' => 'fieldset',
-          '#title' => t('Step 1: Personal details'),
+          '#title' => $this->t('Step 1: Personal details'),
         ];
         $form['step1']['name'] = [
           '#type' => 'textfield',
-          '#title' => t('Your name'),
+          '#title' => $this->t('Your name'),
           '#default_value' => empty($form_state->getValue(['step1', 'name']) ? '' : $form_state->getValue(['step1', 'name'])),
           '#required' => TRUE,
         ];
@@ -67,11 +67,11 @@ class AjaxExampleWizard extends FormBase {
       case 2:
         $form['step2'] = [
           '#type' => 'fieldset',
-          '#title' => t('Step 2: Street address info'),
+          '#title' => $this->t('Step 2: Street address info'),
         ];
         $form['step2']['address'] = [
           '#type' => 'textfield',
-          '#title' => t('Your street address'),
+          '#title' => $this->t('Your street address'),
           '#default_value' => empty($form_state->getValue(['step1', 'address']) ? '' : $form_state->getValue(['step1', 'address'])),
           '#required' => TRUE,
         ];
@@ -80,11 +80,11 @@ class AjaxExampleWizard extends FormBase {
       case 3:
         $form['step3'] = [
           '#type' => 'fieldset',
-          '#title' => t('Step 3: City info'),
+          '#title' => $this->t('Step 3: City info'),
         ];
         $form['step3']['city'] = [
           '#type' => 'textfield',
-          '#title' => t('Your city'),
+          '#title' => $this->t('Your city'),
           '#default_value' => empty($form_state->getValue(['step1', 'city']) ? '' : $form_state->getValue(['step1', 'city'])),
           '#required' => TRUE,
         ];
@@ -93,13 +93,13 @@ class AjaxExampleWizard extends FormBase {
     if ($step_name == 3) {
       $form['submit'] = [
         '#type' => 'submit',
-        '#value' => t("Submit your information"),
+        '#value' => $this->t("Submit your information"),
       ];
     }
     if ($step_name < 3) {
       $form['next'] = [
         '#type' => 'submit',
-        '#value' => t('Next step'),
+        '#value' => $this->t('Next step'),
         '#ajax' => [
           'wrapper' => 'wizard-form-wrapper',
           'callback' => '::functionajax',
@@ -109,7 +109,7 @@ class AjaxExampleWizard extends FormBase {
     if ($step_name > 1) {
       $form['prev'] = [
         '#type' => 'submit',
-        '#value' => t("Previous step"),
+        '#value' => $this->t("Previous step"),
 
       // Since all info will be discarded, don't validate on 'prev'.
         '#limit_validation_errors' => [],
