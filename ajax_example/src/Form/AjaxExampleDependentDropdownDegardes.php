@@ -134,7 +134,7 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Switch ($form_state->getTriggeringElement()) {
-    // case t('OK'):
+    // case $this->t('OK'):
     // Submit: We're done.
     $trigger = $form_state->getTriggeringElement()['#value'];
     switch ($trigger) {
@@ -143,7 +143,7 @@ class AjaxExampleDependentDropdownDegardes extends FormBase {
         break;
 
       case 'OK':
-        drupal_set_message(t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
+        drupal_set_message($this->t('Your values have been submitted. dropdown_first=@first, dropdown_second=@second', ['@first' => $form_state->getValue('dropdown_first'), '@second' => $form_state->getValue('dropdown_second')]));
         break;
     }
     $form_state->setRebuild();
