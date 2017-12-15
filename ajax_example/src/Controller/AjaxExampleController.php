@@ -61,14 +61,14 @@ class AjaxExampleController extends ControllerBase {
    */
   public function progressbarProgress($time) {
     $progress = [
-      'message' => t('Starting execute...'),
+      'message' => $this->t('Starting execute...'),
       'percentage' => -1,
     ];
 
     $completed_percentage = \Drupal::config('ajaxexample.settings')->get('example_progressbar_' . $time);
 
     if ($completed_percentage) {
-      $progress['message'] = t('Executing...');
+      $progress['message'] = $this->t('Executing...');
       $progress['percentage'] = $completed_percentage;
     }
 
@@ -101,7 +101,7 @@ URL whether JS was enabled or not, letting it do different things based on that.
     ];
     $build['ajax_link'] = [
       '#type' => 'link',
-      '#title' => t('Click here'),
+      '#title' => $this->t('Click here'),
     // Note the /nojs portion of the href - if javascript is enabled,
     // this part will be stripped from the path before it is called.
       '#href' => 'ajax_link_callback/nojs/',

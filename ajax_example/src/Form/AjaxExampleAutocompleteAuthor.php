@@ -26,14 +26,14 @@ public function getFormID() {
  */
 public function buildForm(array $form, FormStateInterface $form_state) {
   $form['intro'] = [
-    '#markup' => '<div>' . t("This example uses a user autocomplete to dynamically change a node title autocomplete using #ajax.
+    '#markup' => '<div>' . $this->t("This example uses a user autocomplete to dynamically change a node title autocomplete using #ajax.
       This is a way to get past the fact that we have no other way to provide context to the autocomplete function.
       It won't work very well unless you have a few users who have created some content that you can search for.") . '</div>',
   ];
 
   $form['author'] = [
     '#type' => 'textfield',
-    '#title' => t('Choose the username that authored nodes you are interested in'),
+    '#title' => $this->t('Choose the username that authored nodes you are interested in'),
   // Since we just need simple user lookup, we can use the simplest function
   // of them all, user_autocomplete().
     '#autocomplete_path' => 'user/autocomplete',
@@ -47,7 +47,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
   // author changes, allowing the search to be limited by user.
   $form['node'] = [
     '#type' => 'textfield',
-    '#title' => t('Choose a node by title'),
+    '#title' => $this->t('Choose a node by title'),
     '#prefix' => '<div id="autocomplete-by-node-ajax-replace">',
     '#suffix' => '</div>',
     '#disabled' => TRUE,
@@ -60,7 +60,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
     if (!empty($author)) {
       $autocomplete_path = 'examples/ajax_example/node_by_author_autocomplete/' . $author->uid;
       $form['node']['#autocomplete_path'] = $autocomplete_path;
-      $form['node']['#title'] = t('Choose a node title authored by %author', ['%author' => $author->name]);
+      $form['node']['#title'] = $this->t('Choose a node title authored by %author', ['%author' => $author->name]);
       $form['node']['#disabled'] = FALSE;
     }
   }
@@ -71,7 +71,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
 
   $form['actions']['submit'] = [
     '#type' => 'submit',
-    '#value' => t('Submit'),
+    '#value' => $this->t('Submit'),
   ];
 
   return $form;
@@ -88,7 +88,7 @@ public function validateForm(array &$form, FormStateInterface $form_state) {
   // We must have a valid user.
   $account = user_load_by_name($author);
   if (empty($account)) {
-    $form_state->setErrorByName($form['author'], t('You must choose a valid author username'));
+    $form_state->setErrorByName($form['author'], $this->t('You must choose a valid author username'));
     return;
   }
   // This preg_match() looks for the last pattern like [33334] and if found
@@ -101,7 +101,7 @@ public function validateForm(array &$form, FormStateInterface $form_state) {
     // Verify that it's a valid nid.
     $node = Node::load($nid);
     if (empty($node)) {
-      $form_state->setErrorByName($form['node'], t('Sorry, no node with nid %nid can be found', ['%nid' => $nid]));
+      $form_state->setErrorByName($form['node'], $this->t('Sorry, no node with nid %nid can be found', ['%nid' => $nid]));
       return;
     }
     // BUT: Not everybody will have javascript turned on, or they might hit ESC
@@ -126,7 +126,7 @@ public function validateForm(array &$form, FormStateInterface $form_state) {
       $form_state->setValue('node', $nid);
     }
     else {
-      $form_state->setErrorByName($form['node'], t('Sorry, no node starting with %title can be found', ['%title' => $title]));
+      $form_state->setErrorByName($form['node'], $this->t('Sorry, no node starting with %title can be found', ['%title' => $title]));
     }
 
   }

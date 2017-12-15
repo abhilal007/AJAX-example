@@ -29,7 +29,7 @@ class AjaxExampleUniquecomplete extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['info'] = [
-      '#markup' => '<div>' . t("This example does a node autocomplete by title. The difference between this and a username autocomplete is that the node title may not be unique, so we have to use the nid for uniqueness, placing it in a parseable location in the textfield.") . '</div>',
+      '#markup' => '<div>' . $this->t("This example does a node autocomplete by title. The difference between this and a username autocomplete is that the node title may not be unique, so we have to use the nid for uniqueness, placing it in a parseable location in the textfield.") . '</div>',
     ];
 
     $form['node'] = [
@@ -68,7 +68,7 @@ class AjaxExampleUniquecomplete extends FormBase {
       // Verify that it's a valid nid.
       $node = Node::load($nid);
       if (empty($node)) {
-        $form_state->setErrorByName($form['node'], t('Sorry, no node with nid %nid can be found', ['%nid' => $nid]));
+        $form_state->setErrorByName($form['node'], $this->t('Sorry, no node with nid %nid can be found', ['%nid' => $nid]));
         return;
       }
     }

@@ -34,8 +34,8 @@ class AjaxExampleNodeFormAlter extends FormBase {
     $node = $form['#node'];
     $form['ajax_example_1'] = [
       '#type' => 'checkbox',
-      '#title' => t('AJAX Example 1'),
-      '#description' => t('Enable to show second field.'),
+      '#title' => $this->t('AJAX Example 1'),
+      '#description' => $this->t('Enable to show second field.'),
       '#default_value' => $node->ajax_example['example_1'],
       '#ajax' => [
         'callback' => '::ajax_example_form_node_callback',
@@ -56,8 +56,8 @@ class AjaxExampleNodeFormAlter extends FormBase {
 
       $form['container']['ajax_example_2'] = [
         '#type' => 'textfield',
-        '#title' => t('AJAX Example 2'),
-        '#description' => t('AJAX Example 2'),
+        '#title' => $this->t('AJAX Example 2'),
+        '#description' => $this->t('AJAX Example 2'),
         '#default_value' => empty($form_state->getValue('ajax_example_2')) ? $node->ajax_example['example_2'] : $form_state->getValue('ajax_example_2'),
       ];
     }

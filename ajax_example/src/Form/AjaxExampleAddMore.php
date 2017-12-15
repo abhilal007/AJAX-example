@@ -31,7 +31,7 @@ class AjaxExampleAddMore extends FormBase {
     $urltwo = Url::fromUri('internal:/examples/ajax_example/add-more');
     $linktwo = Link::fromTextAndUrl($this->t('AJAX version'), $urltwo)->toString();
     $form['description'] = [
-      '#markup' => t('This example shows an add-more and a remove-last button. The @link does it without page reloads; the @link2 is the same code but simulates a non-javascript environment, showing it with page reloads.',
+      '#markup' => $this->t('This example shows an add-more and a remove-last button. The @link does it without page reloads; the @link2 is the same code but simulates a non-javascript environment, showing it with page reloads.',
       ['@link' => $linktwo, '@link2' => $link]),
 
     ];
@@ -42,7 +42,7 @@ class AjaxExampleAddMore extends FormBase {
     $form['#tree'] = TRUE;
     $form['names_fieldset'] = [
       '#type' => 'fieldset',
-      '#title' => t('People coming to the picnic'),
+      '#title' => $this->t('People coming to the picnic'),
     // Set up the wrapper so that AJAX will be able to replace the fieldset.
       '#prefix' => '<div id="names-fieldset-wrapper">',
       '#suffix' => '</div>',
@@ -56,12 +56,12 @@ class AjaxExampleAddMore extends FormBase {
     for ($i = 0; $i < $name_field; $i++) {
       $form['names_fieldset']['name'][$i] = [
         '#type' => 'textfield',
-        '#title' => t('Name'),
+        '#title' => $this->t('Name'),
       ];
     }
     $form['names_fieldset']['add_name'] = [
       '#type' => 'submit',
-      '#value' => t('Add one more'),
+      '#value' => $this->t('Add one more'),
       '#submit' => ['::ajax_example_add_more_add_one'],
       '#ajax' => [
         'callback' => '::prompt',
@@ -71,7 +71,7 @@ class AjaxExampleAddMore extends FormBase {
     if ($form['num_names'] > 1) {
       $form['names_fieldset']['remove_name'] = [
         '#type' => 'submit',
-        '#value' => t('Remove one'),
+        '#value' => $this->t('Remove one'),
         '#submit' => ['::ajax_example_add_more_remove_one'],
         '#ajax' => [
           'callback' => '::prompt',
@@ -81,7 +81,7 @@ class AjaxExampleAddMore extends FormBase {
     }
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => $this->t('Submit'),
     ];
 
     // This simply allows us to demonstrate no-javascript use without
@@ -141,7 +141,7 @@ class AjaxExampleAddMore extends FormBase {
    * Reports what values were finally set.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $output = t('These people are coming to the picnic: @names',
+    $output = $this->t('These people are coming to the picnic: @names',
     [
       '@names' => implode(', ', $form_state->getValue(['names_fieldset', 'name'])),
     ]

@@ -23,7 +23,7 @@ class AjaxExampleAutocheckboxes extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $num_checkboxes = !empty($form_state->getValue('howmany_select')) ? $form_state->getValue('howmany_select') : 1;
     $form['howmany_select'] = [
-      '#title' => t('How many checkboxes do you want?'),
+      '#title' => $this->t('How many checkboxes do you want?'),
       '#type' => 'select',
       '#options' => [1 => 1, 2 => 2, 3 => 3, 4 => 4],
       '#default_value' => $num_checkboxes,
@@ -45,7 +45,7 @@ class AjaxExampleAutocheckboxes extends FormBase {
     ];
 
     $form['checkboxes_fieldset'] = [
-      '#title' => t("Generated Checkboxes"),
+      '#title' => $this->t("Generated Checkboxes"),
       // The prefix/suffix provide the div that we're replacing, named by
       // #ajax['wrapper'] above.
       '#prefix' => '<div id="checkboxes-div">',
